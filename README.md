@@ -5,7 +5,7 @@
 ![Expo](https://img.shields.io/badge/Expo-router-000020)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E)
 ![AsyncStorage](https://img.shields.io/badge/AsyncStorage-persist%C3%AAncia-7CB342)
-![Context API](https://img.shields.io/badge/Context%20API-estado%20global-8E24AA)
+![REST API](https://img.shields.io/badge/REST%20API-integra%C3%A7%C3%A3o-8E24AA)
 
 Protótipo cross-platform em **JavaScript** para o Challenge FIAP + CCR Motiva.
 
