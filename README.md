@@ -56,18 +56,74 @@ Ter um aplicativo simples, rápido e confiável que ajude a registrar o trecho e
 ## 5. Proposta de Solução
 Aplicativo mobile em **React Native + Expo** com foco em uso por operador de campo.
 
-## Como executar
-# clonar o repositório
-git clone <url-do-repositorio>
+## Como executar o projeto
 
-# acessar a pasta
-cd verdecheck-mobile
+### Pré-requisitos
+Antes de começar, você precisa ter instalado na sua máquina:
 
-# instalar dependências
+- [Node.js](https://nodejs.org/)
+- npm ou yarn
+- [Expo Go](https://expo.dev/go) no celular **ou** emulador Android/iOS
+- Git
+
+### 1. Clonar o repositório
+```bash
+git clone <URL_DO_SEU_REPOSITORIO>
+```
+
+### 2. Acessar a pasta do projeto
+```bash
+cd <NOME_DA_PASTA_DO_PROJETO>
+```
+
+### 3. Instalar as dependências
+```bash
 npm install
+```
 
-# iniciar o projeto
+### 4. Iniciar o projeto
+```bash
 npx expo start
+```
+
+### 5. Rodar no dispositivo
+Após iniciar o Expo, você terá algumas opções:
+
+- pressionar `a` para abrir no emulador Android
+- pressionar `i` para abrir no simulador iOS
+- escanear o QR Code com o app **Expo Go** no celular
+
+---
+
+## Scripts úteis
+
+```bash
+npx expo start
+```
+Inicia o servidor de desenvolvimento do Expo.
+
+```bash
+npx expo start --clear
+```
+Inicia o projeto limpando o cache.
+
+```bash
+npm install
+```
+Instala todas as dependências do projeto.
+
+---
+
+## Observações
+- Certifique-se de estar na mesma rede Wi-Fi do computador ao testar no celular com Expo Go.
+- Caso ocorra erro de dependências, tente reinstalar os pacotes com:
+```bash
+npm install
+```
+- Caso o cache cause problemas, execute:
+```bash
+npx expo start --clear
+```
 
 ### Fluxo resumido
 1. operador abre o app;
