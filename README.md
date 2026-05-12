@@ -56,6 +56,19 @@ Ter um aplicativo simples, rápido e confiável que ajude a registrar o trecho e
 ## 5. Proposta de Solução
 Aplicativo mobile em **React Native + Expo** com foco em uso por operador de campo.
 
+## Como executar
+# clonar o repositório
+git clone <url-do-repositorio>
+
+# acessar a pasta
+cd verdecheck-mobile
+
+# instalar dependências
+npm install
+
+# iniciar o projeto
+npx expo start
+
 ### Fluxo resumido
 1. operador abre o app;
 2. inicia uma nova análise;
