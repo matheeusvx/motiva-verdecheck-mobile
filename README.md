@@ -1,5 +1,12 @@
 # Motiva VerdeCheck Mobile
 
+![status](https://img.shields.io/badge/status-finalizado-orange)
+![React Native](https://img.shields.io/badge/React%20Native-mobile-61DAFB)
+![Expo](https://img.shields.io/badge/Expo-router-000020)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E)
+![AsyncStorage](https://img.shields.io/badge/AsyncStorage-persist%C3%AAncia-7CB342)
+![Context API](https://img.shields.io/badge/Context%20API-estado%20global-8E24AA)
+
 Protótipo cross-platform em **JavaScript** para o Challenge FIAP + CCR Motiva.
 
 ## 1. Visão Geral
@@ -132,11 +139,12 @@ O protótipo cobre as telas principais:
 - Detalhe da inspeção
 
 ## 10. Integrantes
-Preencher com os nomes do grupo:
-- Integrante 1
-- Integrante 2
-- Integrante 3
-- Integrante 4
+- Matheus Morelli
+- Rafael Ferreira
+- Cauã Muniz
+- Henrique Mortari
+- Victor Mortari
+- Lucas Eiki
 
 ## 11. Status da Sprint 1
 ### Entregas previstas
