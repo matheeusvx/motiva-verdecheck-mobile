@@ -1,3 +1,5 @@
+
+
 # Motiva VerdeCheck Mobile
 
 ![status](https://img.shields.io/badge/status-finalizado-orange)
@@ -224,15 +226,13 @@ O protótipo cobre as telas principais:
 - [x] protótipo navegável em código base
 - [x] handoff detalhado para Figma
 
-## 12. Próximos Passos
-### Sprint 2
-- validar dataset inicial;
-- definir formato da API de análise;
-- criar fluxo de envio de imagem real;
-- iniciar integração com serviço de classificação.
+---
 
-### Sprint 3+
-- integrar modelo de visão computacional;
-- adicionar geolocalização automática;
-- adicionar sincronização com back-end;
-- gerar dashboard operacional e priorização.
+## 🛠️ Atualizações da Sprint (Hotfixes Aplicados)
+
+Durante o desenvolvimento do protótipo navegável, foram aplicadas as seguintes melhorias na arquitetura técnica do app:
+
+* **Guarda de Rotas Condicional (`AppNavigator.js`):** Implementação de navegação dinâmica baseada no estado do usuário. O aplicativo agora detecta automaticamente se o inspetor está autenticado, protegendo as telas internas e eliminando erros de rotas não manipuladas (`REPLACE`).
+* **Gerenciamento de Estado Global (`InspectionContext.js`):** Acoplamento das funções de login e encerramento de sessão ao estado centralizado do aplicativo.
+* **Persistência de Sessão Local:** Ajuste na inicialização com `AsyncStorage` para garantir que os dados do usuário permaneçam salvos ao recarregar o Metro Bundler (`r`), simulando perfeitamente o comportamento de um app em produção.
+* **Estabilização de Componentes:** Isolamento de estilos nos botões principais (`HomeScreen.js`), removendo dependências externas de arquivos de tema para evitar quebras visuais e travamentos.
