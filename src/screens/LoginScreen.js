@@ -1,74 +1,91 @@
+// src/screens/LoginScreen.js
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import ScreenContainer from '../components/ScreenContainer';
-import PrimaryButton from '../components/PrimaryButton';
-import { colors } from '../utils/theme';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  TextInput, 
+  TouchableOpacity, 
+  KeyboardAvoidingView, 
+  Platform,
+  ScrollView
+} from 'react-native';
+import { useInspection } from '../contexts/InspectionContext';
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState('operador@motiva.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { loginUser } = useInspection();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
+    
+    try {
+      // Executa a função de login do seu Context
+      await loginUser(email);
+      // Navega para a Home após o sucesso
+      navigation.replace('Home');
+    } catch (error) {
+      alert('Erro ao realizar o login.');
+    }
+  };
 
   return (
-    <ScreenContainer scroll={false}>
-      <View style={styles.wrapper}>
-        <View style={styles.logoCircle}>
-          <Text style={styles.logoText}>MV</Text>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+      style={styles.container}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.card}>
+          <Text style={styles.logo}>🌱 VerdeCheck</Text>
+          <Text style={styles.subtitle}>Sessão Operacional Motiva</Text>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>E-mail Corporativo</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="seu.nome@motiva.com"
+              placeholderTextColor="#94A3B8"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Senha de Acesso</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="••••••••"
+              placeholderTextColor="#94A3B8"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.85}>
+            <Text style={styles.buttonText}>Entrar no Painel</Text>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Motiva VerdeCheck</Text>
-        <Text style={styles.subtitle}>Inspeção de vegetação para apoio à decisão de corte.</Text>
-
-        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="E-mail" placeholderTextColor={colors.textMuted} />
-        <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Senha" placeholderTextColor={colors.textMuted} secureTextEntry />
-
-        <PrimaryButton label="Entrar" onPress={() => navigation.replace('Main')} />
-      </View>
-    </ScreenContainer>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center'
-  },
-  logoCircle: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginBottom: 20
-  },
-  logoText: {
-    color: '#FFF',
-    fontWeight: '800',
-    fontSize: 28
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: colors.text,
-    textAlign: 'center',
-    marginBottom: 8
-  },
-  subtitle: {
-    textAlign: 'center',
-    color: colors.textMuted,
-    marginBottom: 28,
-    fontSize: 15
-  },
-  input: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 12,
-    fontSize: 15,
-    color: colors.text
-  }
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  scrollContainer: { flexGrow: 1, justifyContent: 'center', padding: 24 },
+  card: { backgroundColor: '#FFFFFF', borderRadius: 28, padding: 24, borderWidth: 1, borderColor: '#E2E8F0', shadowColor: '#2E1065', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 15, elevation: 2 },
+  logo: { fontSize: 32, fontWeight: '800', color: '#2E1065', textAlign: 'center', marginBottom: 4 },
+  subtitle: { fontSize: 14, color: '#64748B', fontWeight: '600', textAlign: 'center', marginBottom: 32 },
+  inputGroup: { marginBottom: 20 },
+  label: { fontSize: 13, fontWeight: '700', color: '#475569', marginBottom: 8, marginLeft: 4 },
+  input: { backgroundColor: '#F8FAFC', borderWidth: 1.5, borderColor: '#E2E8F0', borderRadius: 16, paddingHorizontal: 16, paddingVertical: 14, fontSize: 15, color: '#1E293B' },
+  button: { backgroundColor: '#4C1D95', borderRadius: 18, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 12 },
+  buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' }
 });

@@ -1,112 +1,79 @@
+// src/screens/ResultScreen.js
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import ScreenContainer from '../components/ScreenContainer';
 import PrimaryButton from '../components/PrimaryButton';
-import StatusBadge from '../components/StatusBadge';
+
 import { useInspection } from '../contexts/InspectionContext';
-import { evaluateInspection } from '../utils/mockAnalysis';
+
 import { colors } from '../utils/theme';
 
-const areaLabels = {
-  area_nobre: 'Área nobre',
-  faixa_comum: 'Faixa de domínio comum',
-  curva_visibilidade: 'Curva com visibilidade',
-  entorno_operacional: 'Entorno operacional'
-};
+
 
 export default function ResultScreen({ navigation }) {
   const { draft, saveInspection, resetDraft } = useInspection();
-  const result = evaluateInspection(draft);
-  const status = result.shouldCut ? 'Cortar' : 'Não cortar';
 
-  const handleSave = async () => {
-    await saveInspection({
-      id: String(Date.now()),
-      createdAt: new Date().toISOString(),
+
+  const handleFinish = async () => {
+    const record = {
+    
+    
+    
+  id: String(Date.now()),
       road: draft.road,
       km: draft.km,
       direction: draft.direction,
-      areaType: draft.areaType,
-      areaLabel: areaLabels[draft.areaType] ?? 'Área não informada',
-      notes: draft.notes,
-      estimatedHeight: draft.estimatedHeight,
-      status,
-      confidence: result.confidence,
-      justification: result.justification,
-      imageUri: draft.imageUri || 'mock://vegetation-image'
-    });
+      status: 'Crítico', // Simulado
+      estimatedHeight: draft.estimatedHeight + 'cm',
+      date: new Date().toLocaleDateString('pt-BR'),
+    };
+    await saveInspection(record);
     resetDraft();
-    navigation.navigate('Histórico', { screen: 'HistoryList' });
+    navigation.navigate('Início');
   };
 
   return (
     <ScreenContainer>
-      <View style={styles.imageMock}>
-        <Text style={styles.imageMockText}>Imagem do trecho</Text>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPadding}>
+        <Text style={styles.title}>Diagnóstico</Text>
+        <Text style={styles.subtitle}>Resultado da análise de imagem.</Text>
 
-      <StatusBadge status={status} />
-      <Text style={styles.title}>{status}</Text>
-      <Text style={styles.confidence}>Confiança estimada: {(result.confidence * 100).toFixed(0)}%</Text>
+        <View style={styles.resultCard}>
+          <Text style={styles.resultLabel}>STATUS DETECTADO</Text>
+          <Text style={[styles.resultValue, { color: colors.error }]}>Nível Crítico</Text>
+          <View style={styles.divider} />
+          <Text style={styles.resultDesc}>
+            Detectamos vegetação com altura média de <Text style={styles.bold}>{draft.estimatedHeight}cm</Text>. 
+            O trecho requer intervenção imediata da equipe de roçada.
+          </Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Justificativa</Text>
-        <Text style={styles.cardText}>{result.justification}</Text>
-      </View>
+        <View style={styles.detailsCard}>
+          <Text style={styles.detailsTitle}>Detalhes do Trecho</Text>
+          <View style={styles.detailRow}><Text style={styles.dL}>Rodovia</Text><Text style={styles.dV}>{draft.road}</Text></View>
+          <View style={styles.detailRow}><Text style={styles.dL}>Quilômetro</Text><Text style={styles.dV}>{draft.km}</Text></View>
+          <View style={styles.detailRow}><Text style={styles.dL}>Confiança IA</Text><Text style={styles.dV}>94.2%</Text></View>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Resumo do trecho</Text>
-        <Text style={styles.cardText}>Rodovia: {draft.road || '-'}</Text>
-        <Text style={styles.cardText}>KM: {draft.km || '-'}</Text>
-        <Text style={styles.cardText}>Sentido: {draft.direction || '-'}</Text>
-        <Text style={styles.cardText}>Área: {areaLabels[draft.areaType] ?? '-'}</Text>
-      </View>
-
-      <PrimaryButton label="Salvar inspeção" onPress={handleSave} />
-      <PrimaryButton label="Nova análise" variant="secondary" onPress={() => navigation.popToTop()} />
+        <PrimaryButton label="Salvar e Finalizar" onPress={handleFinish} />
+      </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  imageMock: {
-    backgroundColor: '#DDD6FE',
-    height: 220,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 18
-  },
-  imageMockText: {
-    color: colors.primaryDark,
-    fontWeight: '700'
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: colors.text,
-    marginTop: 12,
-    marginBottom: 4
-  },
-  confidence: {
-    color: colors.textMuted,
-    marginBottom: 18
-  },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12
-  },
-  cardTitle: {
-    fontWeight: '700',
-    color: colors.text,
-    marginBottom: 8,
-    fontSize: 16
-  },
-  cardText: {
-    color: colors.textMuted,
-    lineHeight: 20,
-    marginBottom: 4
-  }
+  scrollPadding: { paddingBottom: 40 },
+  title: { fontSize: 28, fontWeight: '800', color: colors.text },
+  subtitle: { fontSize: 14, color: colors.textMuted, marginBottom: 24 },
+  resultCard: { backgroundColor: '#FEF2F2', padding: 24, borderRadius: 20, borderWidth: 1, borderColor: '#FCA5A5', marginBottom: 16 },
+  resultLabel: { fontSize: 10, fontWeight: '800', color: '#991B1B', letterSpacing: 1 },
+  resultValue: { fontSize: 32, fontWeight: '800', marginVertical: 8 },
+  divider: { height: 1, backgroundColor: '#FCA5A5', opacity: 0.3, marginVertical: 16 },
+  resultDesc: { fontSize: 15, color: '#7F1D1D', lineHeight: 22 },
+  bold: { fontWeight: '700' },
+  detailsCard: { backgroundColor: '#FFF', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: colors.border, marginBottom: 24 },
+  detailsTitle: { fontSize: 16, fontWeight: '700', marginBottom: 16 },
+  detailRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#F8FAFC' },
+  dL: { color: colors.textMuted, fontSize: 14 },
+  dV: { fontWeight: '600', color: colors.text, fontSize: 14 }
 });

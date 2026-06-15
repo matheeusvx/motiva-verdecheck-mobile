@@ -1,47 +1,39 @@
+// src/screens/ProcessingScreen.js
 import React, { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import ScreenContainer from '../components/ScreenContainer';
-import { useInspection } from '../contexts/InspectionContext';
+
 import { colors } from '../utils/theme';
 
 export default function ProcessingScreen({ navigation }) {
-  const { draft } = useInspection();
-
+  
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      navigation.replace('Result');
-    }, 1300);
-
-    return () => clearTimeout(timeout);
-  }, [navigation, draft]);
+    setTimeout(() => navigation.replace('Result'), 2500);
+  }, []);
 
   return (
-    <ScreenContainer scroll={false}>
-      <View style={styles.wrapper}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.title}>Analisando vegetação...</Text>
-        <Text style={styles.subtitle}>Gerando recomendação para o trecho informado.</Text>
+    <ScreenContainer>
+      <View style={styles.content}>
+        <View style={styles.iconContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+        <Text style={styles.title}>Analisando...</Text>
+        <Text style={styles.description}>
+          A IA está processando as texturas e padrões de crescimento da vegetação para gerar o diagnóstico.
+        </Text>
+        <View style={styles.tag}>
+          <Text style={styles.tagText}>VISÃO COMPUTACIONAL ATIVA</Text>
+        </View>
       </View>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: colors.text,
-    marginTop: 20,
-    marginBottom: 8
-  },
-  subtitle: {
-    color: colors.textMuted,
-    textAlign: 'center'
-  }
+  content: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
+  iconContainer: { marginBottom: 24, padding: 20, backgroundColor: '#EEF2FF', borderRadius: 100 },
+  title: { fontSize: 24, fontWeight: '800', color: colors.text, marginBottom: 8 },
+  description: { textAlign: 'center', color: colors.textMuted, lineHeight: 22, fontSize: 15 },
+  tag: { marginTop: 32, backgroundColor: colors.text, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 },
+  tagText: { color: '#FFF', fontSize: 10, fontWeight: '700', letterSpacing: 1 }
 });

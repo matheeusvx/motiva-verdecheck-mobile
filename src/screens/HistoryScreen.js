@@ -1,91 +1,83 @@
+// src/screens/HistoryScreen.js
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import ScreenContainer from '../components/ScreenContainer';
-import StatusBadge from '../components/StatusBadge';
+
 import { useInspection } from '../contexts/InspectionContext';
 import { colors } from '../utils/theme';
 
-export default function HistoryScreen({ navigation }) {
+export default function HistoryScreen() {
   const { history } = useInspection();
 
   return (
     <ScreenContainer>
-      <Text style={styles.title}>Histórico de inspeções</Text>
-      <Text style={styles.subtitle}>Consulte análises registradas pela equipe.</Text>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPadding}>
+        <Text style={styles.title}>Histórico</Text>
+        <Text style={styles.subtitle}>Registros de auditoria salvos no dispositivo.</Text>
 
-      {history.length === 0 ? (
-        <View style={styles.emptyCard}>
-          <Text style={styles.emptyTitle}>Nenhuma inspeção salva</Text>
-          <Text style={styles.emptyText}>Salve uma análise para visualizar o histórico.</Text>
-        </View>
-      ) : (
-        history.map(item => (
-          <Pressable key={item.id} style={styles.card} onPress={() => navigation.navigate('InspectionDetail', { item })}>
-            <View style={styles.cardTop}>
-              <View>
-                <Text style={styles.cardTitle}>{item.road} km {item.km}</Text>
-                <Text style={styles.cardSubtitle}>{item.areaLabel}</Text>
+        {history.map((item) => {
+          const isCritico = item.status === 'Crítico';
+          return (
+            <View key={item.id} style={styles.card}>
+              <View style={styles.header}>
+                <View>
+                  <Text style={styles.roadText}>{item.road} — KM {item.km}</Text>
+                  <Text style={styles.dateText}>{item.date}</Text>
+                </View>
+                <View style={[styles.badge, { backgroundColor: isCritico ? '#FEF2F2' : '#F0FDF4' }]}>
+                  <Text style={[styles.badgeText, { color: isCritico ? colors.error : colors.success }]}>
+                    {item.status.toUpperCase()}
+                  </Text>
+                </View>
               </View>
-              <StatusBadge status={item.status} />
+
+              <View style={styles.infoRow}>
+                <View style={styles.infoBox}>
+                  <Text style={styles.infoLabel}>ALTURA</Text>
+                  <Text style={styles.infoValue}>{item.estimatedHeight}</Text>
+                </View>
+                <View style={styles.infoBox}>
+                  <Text style={styles.infoLabel}>SENTIDO</Text>
+                  <Text style={styles.infoValue}>{item.direction}</Text>
+                </View>
+              </View>
+
+              {item.notes ? (
+                <Text style={styles.notes} numberOfLines={1}>Obs: {item.notes}</Text>
+              ) : null}
             </View>
-            <Text style={styles.meta}>Sentido: {item.direction || '-'}</Text>
-            <Text style={styles.meta}>Data: {new Date(item.createdAt).toLocaleString('pt-BR')}</Text>
-          </Pressable>
-        ))
-      )}
+          );
+        })}
+      </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: colors.text,
-    marginBottom: 4
-  },
-  subtitle: {
-    color: colors.textMuted,
-    marginBottom: 20
-  },
-  emptyCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 20
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.text,
-    marginBottom: 6
-  },
-  emptyText: {
-    color: colors.textMuted
-  },
+  scrollPadding: { paddingBottom: 40, paddingTop: 10 },
+  title: { fontSize: 28, fontWeight: '800', color: colors.text },
+  subtitle: { fontSize: 14, color: colors.textMuted, marginBottom: 24 },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 18,
-    padding: 16,
-    marginBottom: 12
+    padding: 18,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  cardTop: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginBottom: 10
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: colors.text
-  },
-  cardSubtitle: {
-    color: colors.textMuted,
-    marginTop: 4
-  },
-  meta: {
-    color: colors.textMuted,
-    marginTop: 4
-  }
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  roadText: { fontSize: 18, fontWeight: '700', color: colors.text },
+  dateText: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
+  badgeText: { fontSize: 10, fontWeight: '800' },
+  infoRow: { flexDirection: 'row', gap: 12 },
+  infoBox: { flex: 1, backgroundColor: '#F8FAFC', padding: 10, borderRadius: 10 },
+  infoLabel: { fontSize: 9, fontWeight: '700', color: colors.textMuted, marginBottom: 2 },
+  infoValue: { fontSize: 14, fontWeight: '600', color: colors.text },
+  notes: { marginTop: 12, fontSize: 12, color: colors.textMuted, fontStyle: 'italic', borderTopWidth: 1, borderTopColor: '#F1F5F9', paddingTop: 8 }
 });
