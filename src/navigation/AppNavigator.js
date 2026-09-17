@@ -16,6 +16,7 @@ import HistoryScreen from '../screens/HistoryScreen';
 import CameraMockScreen from '../screens/CameraMockScreen';
 import ProcessingScreen from '../screens/ProcessingScreen';
 import ResultScreen from '../screens/ResultScreen';
+import InspectionDetailScreen from '../screens/InspectionDetailScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -96,12 +97,13 @@ export default function AppNavigator() {
         // Se o usuário não está logado (nome padrão), essa fila fica ativa
         <Stack.Screen name="Login" component={LoginScreen} />
       ) : (
-        // Se o usuário está logado reais (ex: Cauã), essa fila assume o controle
+        // Se o usuário está logado (ex: Lucas), essa fila assume o controle
         <>
           <Stack.Screen name="Home" component={MainTabs} />
           <Stack.Screen name="CameraMock" component={CameraMockScreen} />
           <Stack.Screen name="Processing" component={ProcessingScreen} />
           <Stack.Screen name="Result" component={ResultScreen} />
+          <Stack.Screen name="InspectionDetail" component={InspectionDetailScreen} />
         </>
       )}
     </Stack.Navigator>

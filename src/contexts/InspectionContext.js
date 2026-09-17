@@ -12,11 +12,47 @@ const MOCK_INICIAL = [
     km: '142',
     direction: 'Norte (Interior)',
     areaType: 'canteiro_central',
-    notes: 'Mato alto cobrindo placas de sinalização.',
-    estimatedHeight: '120cm',
-    status: 'Crítico',
+    areaLabel: 'Canteiro Central',
+    notes: 'Mato alto cobrindo placas de sinalização e canaleta.',
+    estimatedHeight: '120',
+    status: 'Cortar',
+    severity: 'Crítico',
+    confidence: 0.94,
     date: '15/06/2026',
+    justification: 'A altura informada (120 cm) ultrapassa a tolerância máxima de 20 cm para Canteiro Central.',
     imageUri: 'https://images.unsplash.com/photo-1594993877167-a08f13013dc3?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'mock-2',
+    road: 'SP-348',
+    km: '45',
+    direction: 'Sul (Capital)',
+    areaType: 'faixa_comum',
+    areaLabel: 'Faixa de Domínio Comum',
+    notes: 'Vegetação rasteira uniforme, sem interferência em defensas metálicas.',
+    estimatedHeight: '18',
+    status: 'Não cortar',
+    severity: 'Conforme',
+    confidence: 0.92,
+    date: '16/06/2026',
+    justification: 'A altura informada (18 cm) está dentro da tolerância de até 30 cm para Faixa de Domínio Comum.',
+    imageUri: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'mock-3',
+    road: 'SP-330',
+    km: '98',
+    direction: 'Norte (Interior)',
+    areaType: 'area_nobre',
+    areaLabel: 'Área Nobre (Trevos e Acessos)',
+    notes: 'Trevo de acesso ao distrito industrial, exige padrão visual alto.',
+    estimatedHeight: '16',
+    status: 'Cortar',
+    severity: 'Atenção',
+    confidence: 0.89,
+    date: '17/06/2026',
+    justification: 'A altura informada (16 cm) ultrapassa a tolerância máxima de 10 cm para Área Nobre.',
+    imageUri: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80'
   }
 ];
 
@@ -34,8 +70,9 @@ export function InspectionProvider({ children }) {
   async function loadData() {
     try {
       const rawHistory = await AsyncStorage.getItem(STORAGE_KEY);
-      if (rawHistory) setHistory(JSON.parse(rawHistory));
-      else {
+      if (rawHistory) {
+        setHistory(JSON.parse(rawHistory));
+      } else {
         setHistory(MOCK_INICIAL);
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_INICIAL));
       }
@@ -48,7 +85,6 @@ export function InspectionProvider({ children }) {
   }
 
   async function loginUser(email) {
-    // Extrai o nome do email (ex: munizcaua@gmail.com vira Munizcaua)
     const rawName = email.split('@')[0];
     const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
     const userData = { name: formattedName };
@@ -76,8 +112,29 @@ export function InspectionProvider({ children }) {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   }
 
+  async function clearHistory() {
+    setHistory([]);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  }
+
+  async function resetDefaultHistory() {
+    setHistory(MOCK_INICIAL);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_INICIAL));
+  }
+
   const value = useMemo(
-    () => ({ history, user, draft, loginUser, logoutUser, updateDraft, resetDraft, saveInspection }),
+    () => ({
+      history,
+      user,
+      draft,
+      loginUser,
+      logoutUser,
+      updateDraft,
+      resetDraft,
+      saveInspection,
+      clearHistory,
+      resetDefaultHistory
+    }),
     [history, user, draft]
   );
 

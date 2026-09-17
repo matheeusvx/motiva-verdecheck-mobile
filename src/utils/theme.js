@@ -10,6 +10,10 @@ export const colors = {
   textMuted: '#475569',       // Cinza escuro legível
   error: '#DC2626',
   errorBg: '#FEE2E2',
+  danger: '#DC2626',
+  dangerBg: '#FEE2E2',
+  warning: '#D97706',
+  warningBg: '#FEF3C7',
   success: '#16A34A',
   successBg: '#DCFCE7',
   border: '#E2E8F0'

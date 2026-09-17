@@ -2,7 +2,7 @@
 
 # Motiva VerdeCheck Mobile
 
-![status](https://img.shields.io/badge/status-finalizado-orange)
+![status](https://img.shields.io/badge/status-sprint3_completa-22C55E)
 ![React Native](https://img.shields.io/badge/React%20Native-mobile-61DAFB)
 ![Expo](https://img.shields.io/badge/Expo-router-000020)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E)
@@ -217,22 +217,56 @@ O protótipo cobre as telas principais:
 - Victor Mortari
 - Lucas Eiki
 
-## 11. Status da Sprint 1
-### Entregas previstas
-- [x] README completo
-- [x] documento de requisitos
-- [x] definição de persona
-- [x] justificativa de stack
-- [x] protótipo navegável em código base
-- [x] handoff detalhado para Figma
+## 11. Status das Sprints e Entregas
+
+### Histórico de Evolução
+- **Sprint 1 — Exploração e Requisitos:** [x] Documento de requisitos, personas, justificativa de stack e protótipo base navegável.
+- **Sprint 2 — Refinamento e Hotfixes:** [x] Guarda de rotas dinâmica (`AppNavigator.js`), gestão global com Context API e persistência de sessão com `AsyncStorage`.
+- **Sprint 3 — Protótipo Funcional Completo:** [x] Todos os fluxos principais e secundários implementados, camada de mock completa (sucesso, erro, listas vazias e fluxos alternativos "Cortar" vs "Não cortar"), documento formal de testes manuais e consistência visual padronizada.
 
 ---
 
-## 🛠️ Atualizações da Sprint (Hotfixes Aplicados)
+## 12. Matriz de Status das Funcionalidades (Sprint 3)
 
-Durante o desenvolvimento do protótipo navegável, foram aplicadas as seguintes melhorias na arquitetura técnica do app:
+| Funcionalidade / Fluxo | Estado Atual | Cobertura do Mock / Implementação |
+| :--- | :---: | :--- |
+| **Autenticação de Usuário** | Concluído | Login corporativo persistente via `AsyncStorage` com botão de acesso rápido demo e logout seguro. |
+| **Painel Operacional (Home)** | Concluído | Dashboard com métricas diárias sincronizadas, avatar dinâmico e banner inteligente de alerta para trechos críticos. |
+| **Formulário de Nova Inspeção** | Concluído | Geolocalização (rodovia, km, sentido), seleção técnica de segmento da faixa e validação completa de campos e altura. |
+| **Captura de Evidência Fotográfica** | Concluído | Suporte a câmera real e galeria nativa via `expo-image-picker` com visor preview e botões de simulação rápida para emuladores. |
+| **Inferência e Diagnóstico IA** | Concluído | Processamento simulado com regras CCR completas via `mockAnalysis.js`, cobrindo tanto recomendação **"Cortar"** (excesso de altura) quanto **"Não cortar"** (conforme). |
+| **Histórico de Auditoria** | Concluído | Listagem com `StatusBadge` padronizado, suporte a **Empty State** (lista vazia), limpeza e restauração de dados para demonstração. |
+| **Detalhe da Inspeção** | Concluído | Exibição de evidência fotográfica auditada, justificativa técnica da IA, percentual de confiança e ação de encaminhamento para supervisão. |
 
-* **Guarda de Rotas Condicional (`AppNavigator.js`):** Implementação de navegação dinâmica baseada no estado do usuário. O aplicativo agora detecta automaticamente se o inspetor está autenticado, protegendo as telas internas e eliminando erros de rotas não manipuladas (`REPLACE`).
-* **Gerenciamento de Estado Global (`InspectionContext.js`):** Acoplamento das funções de login e encerramento de sessão ao estado centralizado do aplicativo.
-* **Persistência de Sessão Local:** Ajuste na inicialização com `AsyncStorage` para garantir que os dados do usuário permaneçam salvos ao recarregar o Metro Bundler (`r`), simulando perfeitamente o comportamento de um app em produção.
-* **Estabilização de Componentes:** Isolamento de estilos nos botões principais (`HomeScreen.js`), removendo dependências externas de arquivos de tema para evitar quebras visuais e travamentos.
+---
+
+## 13. Justificativa da Continuidade da Stack (React Native + Expo)
+
+O grupo optou conscientemente por **manter a stack em React Native com Expo** (não migrando para Flutter). Os motivos técnicos que respaldam essa decisão são:
+1. **Velocidade de Prototipação e Ciclo de Feedback:** O ecossistema Expo com Fast Refresh permitiu iterar rapidamente e consolidar todos os fluxos com alta fidelidade sem fricção de compilação nativa.
+2. **Integração Fluida de Mídia Nativa:** O uso de `expo-image-picker` atendeu prontamente a necessidade de acesso à câmera e galeria em Android e iOS mantendo fallbacks robustos.
+3. **Harmonia com Arquitetura Futura de IA:** A separação clara entre cliente mobile (JavaScript/React Native) e microsserviço de Visão Computacional (Python/FastAPI) garante modularidade sem necessidade de reescrita em Dart/Flutter.
+
+---
+
+## 14. Documento de Testes Manuais
+
+O documento com os 5 fluxos principais testados, resultados obtidos e evidências de conformidade está disponível em:
+👉 **[docs/testes-manuais-sprint3.md](docs/testes-manuais-sprint3.md)**
+
+---
+
+## 15. Pendências Identificadas e Plano de Ajustes para a Sprint 4
+
+Conforme preconizado nas diretrizes da Sprint 3, foram mapeadas as pendências e o plano de ação para a entrega final:
+
+1. **Integração Real do Modelo de IA (Visão Computacional):**
+   - *Pendência:* As decisões de corte atualmente utilizam o motor de regras operacionais em `mockAnalysis.js`.
+   - *Plano Sprint 4:* Integrar chamada HTTP `multipart/form-data` conectando o mobile à API REST em Python (FastAPI) executando o classificador convolucional treinado com o dataset de vegetação.
+2. **Geolocalização Automática via GPS (`expo-location`):**
+   - *Pendência:* Rodovia, quilômetro e sentido são selecionados manualmente.
+   - *Plano Sprint 4:* Adicionar botão "Obter Localização Atual" para preenchimento automático das coordenadas e cálculo aproximado do KM.
+3. **Sincronização em Nuvem (Sync Online/Offline):**
+   - *Pendência:* As vistorias ficam gravadas exclusivamente na memória local do celular (`AsyncStorage`).
+   - *Plano Sprint 4:* Implementar sincronização com banco de dados centralizado em nuvem quando houver conexão de rede.
+

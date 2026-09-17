@@ -1,0 +1,28 @@
+================================================================================
+ENTREGA SPRINT 3 — PROTÓTIPO FUNCIONAL COMPLETO
+CHALLENGE FIAP + CCR MOTIVA | DISCIPLINA: CROSS PLATFORM MOBILE (JAVASCRIPT)
+PROJETO: MOTIVA VERDECHECK MOBILE
+================================================================================
+
+1. INTEGRANTES DO GRUPO (NOME E RM):
+- Matheus Morelli - RM: [INSERIR_RM]
+- Rafael Ferreira - RM: [INSERIR_RM]
+- Cauã Muniz - RM: [INSERIR_RM]
+- Henrique Mortari - RM: [INSERIR_RM]
+- Victor Mortari - RM: [INSERIR_RM]
+- Lucas Eiki - RM: [INSERIR_RM]
+
+2. LINK DO REPOSITÓRIO GITHUB (CÓDIGO ATUALIZADO):
+https://github.com/[SEU_USUARIO_OU_ORGANIZACAO]/motiva-verdecheck-mobile
+
+3. LINK DO VÍDEO DE DEMONSTRAÇÃO NO YOUTUBE (NÃO LISTADO - ATÉ 3 MINUTOS):
+https://youtu.be/[SEU_LINK_DO_VIDEO_NAO_LISTADO]
+
+================================================================================
+OBSERVAÇÕES:
+- O vídeo de demonstração percorre todos os fluxos: Login -> Dashboard Home -> 
+  Nova Análise com recomendação "Cortar" (Crítico) -> Nova Análise com recomendação
+  "Não Cortar" (Conforme) -> Histórico com Empty State e Restauração -> Detalhe
+  da Inspeção com Foto Auditada e Laudo.
+- O documento de testes manuais completo encontra-se em: docs/testes-manuais-sprint3.md
+================================================================================

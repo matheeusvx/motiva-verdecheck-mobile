@@ -14,7 +14,9 @@ export default function HomeScreen({ navigation }) {
     return item.date === hojeString;
   }).length : 0;
 
-  const temTrechoCritico = history ? history.some(item => item.status === 'Crítico') : false;
+  const temTrechoCritico = history ? history.some(item => 
+    item.status === 'Cortar' || item.status === 'Crítico' || item.severity === 'Crítico'
+  ) : false;
 
   const handleLogout = async () => {
     try {

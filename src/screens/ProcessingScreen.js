@@ -8,8 +8,12 @@ import { colors } from '../utils/theme';
 export default function ProcessingScreen({ navigation }) {
   
   useEffect(() => {
-    setTimeout(() => navigation.replace('Result'), 2500);
-  }, []);
+    const timer = setTimeout(() => {
+      navigation.replace('Result');
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
 
   return (
     <ScreenContainer>

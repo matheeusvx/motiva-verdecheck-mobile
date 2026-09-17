@@ -17,8 +17,21 @@ export default function NewInspectionScreen({ navigation }) {
   const { draft, updateDraft } = useInspection();
 
   const handleContinue = () => {
-    if (!draft.road?.trim() || !draft.km?.trim() || !draft.direction?.trim()) {
-      Alert.alert('Campos Pendentes', 'Por favor, identifique a rodovia, o quilômetro e o sentido antes de prosseguir.');
+    if (!draft.road?.trim()) {
+      Alert.alert('Campo Obrigatório', 'Por favor, informe a identificação da rodovia (ex: SP-310).');
+      return;
+    }
+    if (!draft.km?.trim()) {
+      Alert.alert('Campo Obrigatório', 'Por favor, informe o quilômetro do trecho (ex: 142).');
+      return;
+    }
+    if (!draft.direction?.trim()) {
+      Alert.alert('Campo Obrigatório', 'Por favor, informe o sentido operacional da via (ex: Norte / Interior).');
+      return;
+    }
+    const heightNum = Number(draft.estimatedHeight);
+    if (!draft.estimatedHeight || isNaN(heightNum) || heightNum <= 0) {
+      Alert.alert('Altura Inválida', 'Por favor, insira uma altura estimada válida em centímetros (maior que zero).');
       return;
     }
     navigation.navigate('CameraMock');
