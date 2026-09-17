@@ -1,14 +1,13 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { colors } from '../utils/theme';
 
-export default function ScreenContainer({ children, scroll = true }) {
-  const Wrapper = scroll ? ScrollView : View;
+export default function ScreenContainer({ children }) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Wrapper style={styles.container} contentContainerStyle={scroll ? styles.content : undefined}>
+      <View style={styles.container}>
         {children}
-      </Wrapper>
+      </View>
     </SafeAreaView>
   );
 }
@@ -16,13 +15,10 @@ export default function ScreenContainer({ children, scroll = true }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background
+    backgroundColor: colors.background || '#F8FAFC'
   },
   container: {
-    flex: 1
-  },
-  content: {
-    padding: 20,
-    paddingBottom: 40
+    flex: 1,
   }
 });
+

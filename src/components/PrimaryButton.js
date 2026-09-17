@@ -1,15 +1,19 @@
-// src/components/PrimaryButton.js
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { colors } from '../utils/theme';
 
-export default function PrimaryButton({ label, onPress, variant = 'primary' }) {
+export default function PrimaryButton({ label, onPress, variant = 'primary', style }) {
   const isPrimary = variant === 'primary';
 
   return (
     <TouchableOpacity 
-      style={[styles.button, isPrimary ? styles.primary : styles.secondary]} 
+      style={[
+        styles.button, 
+        isPrimary ? styles.primary : styles.secondary,
+        style
+      ]} 
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={0.82}
     >
       <Text style={[styles.text, isPrimary ? styles.textPrimary : styles.textSecondary]}>
         {label}
@@ -20,36 +24,40 @@ export default function PrimaryButton({ label, onPress, variant = 'primary' }) {
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 16,
+    paddingVertical: 15,
     borderRadius: 14,
-    
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
   primary: {
-    backgroundColor: '#4C1D95', // Roxo operacional padrão
-    shadowColor: '#4C1D95',
+    backgroundColor: colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    elevation: 3,
   },
   secondary: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0', // Cor cinza suave para bordas
+    borderColor: colors.border,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 1,
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   textPrimary: { 
     color: '#FFFFFF',
   },
   textSecondary: { 
-    color: '#64748B', // Cinza muted estável
+    color: colors.text,
   },
-
 });
+

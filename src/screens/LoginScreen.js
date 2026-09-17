@@ -10,7 +10,9 @@ import {
   ScrollView,
   Alert
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useInspection } from '../contexts/InspectionContext';
+import { colors } from '../utils/theme';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -19,14 +21,13 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Campos Obrigatórios', 'Por favor, preencha o e-mail institucional e a senha.');
+      Alert.alert('Atenção', 'Por favor, preencha o seu e-mail e senha.');
       return;
     }
-    
     try {
       await loginUser(email);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível autenticar a sessão.');
+      Alert.alert('Erro', 'Não foi possível entrar no momento.');
     }
   };
 
@@ -42,59 +43,212 @@ export default function LoginScreen() {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.card}>
-          <Text style={styles.logo}>🌱 VerdeCheck</Text>
-          <Text style={styles.subtitle}>Sessão Operacional CCR Motiva</Text>
+        
+        {/* Marca e Identidade */}
+        <View style={styles.brandContainer}>
+          <View style={styles.logoCircle}>
+            <Ionicons name="leaf" size={32} color={colors.primary} />
+          </View>
+          <Text style={styles.logoTitle}>VerdeCheck</Text>
+          <Text style={styles.logoSubtitle}>Inspeção e Conservação de Rodovias</Text>
+          <View style={styles.pillBadge}>
+            <Text style={styles.pillBadgeText}>CCR MOTIVA</Text>
+          </View>
+        </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>E-mail Corporativo</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="lucas.almeida@motiva.com"
-              placeholderTextColor="#94A3B8"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+        {/* Formulário Limpo */}
+        <View style={styles.formCard}>
+          <Text style={styles.formTitle}>Acesse sua conta</Text>
+
+          {/* Campo E-mail */}
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>E-mail institucional</Text>
+            <View style={styles.inputBox}>
+              <Ionicons name="mail-outline" size={18} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="nome@motiva.com"
+                placeholderTextColor={colors.textLight}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Senha de Acesso</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="••••••••"
-              placeholderTextColor="#94A3B8"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
+          {/* Campo Senha */}
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Senha</Text>
+            <View style={styles.inputBox}>
+              <Ionicons name="lock-closed-outline" size={18} color={colors.textLight} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Sua senha de acesso"
+                placeholderTextColor={colors.textLight}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+            </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.85}>
-            <Text style={styles.buttonText}>Entrar no Painel</Text>
+          {/* Botão Entrar */}
+          <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} activeOpacity={0.85}>
+            <Text style={styles.primaryButtonText}>Entrar no Aplicativo</Text>
+            <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
           </TouchableOpacity>
 
+          {/* Atalho Demo Amigável */}
           <TouchableOpacity style={styles.demoButton} onPress={handleQuickDemoLogin} activeOpacity={0.75}>
-            <Text style={styles.demoButtonText}>⚡ Acesso Rápido Demo (Lucas Almeida)</Text>
+            <Ionicons name="flash-outline" size={16} color={colors.primary} />
+            <Text style={styles.demoButtonText}>Preencher com Usuário Demo</Text>
           </TouchableOpacity>
         </View>
+
+        <Text style={styles.copyright}>Desenvolvido para o Challenge FIAP + CCR Motiva</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
-  scrollContainer: { flexGrow: 1, justifyContent: 'center', padding: 24 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 28, padding: 24, borderWidth: 1, borderColor: '#E2E8F0', shadowColor: '#2E1065', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 15, elevation: 2 },
-  logo: { fontSize: 32, fontWeight: '800', color: '#2E1065', textAlign: 'center', marginBottom: 4 },
-  subtitle: { fontSize: 14, color: '#64748B', fontWeight: '600', textAlign: 'center', marginBottom: 32 },
-  inputGroup: { marginBottom: 20 },
-  label: { fontSize: 13, fontWeight: '700', color: '#475569', marginBottom: 8, marginLeft: 4 },
-  input: { backgroundColor: '#F8FAFC', borderWidth: 1.5, borderColor: '#E2E8F0', borderRadius: 16, paddingHorizontal: 16, paddingVertical: 14, fontSize: 15, color: '#1E293B' },
-  button: { backgroundColor: '#4C1D95', borderRadius: 18, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 12 },
-  buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
-  demoButton: { marginTop: 12, alignItems: 'center', justifyContent: 'center', paddingVertical: 14, borderRadius: 16, backgroundColor: '#F5F3FF', borderWidth: 1, borderColor: '#DDD6FE' },
-  demoButtonText: { color: '#4C1D95', fontSize: 13, fontWeight: '700' }
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 36,
+  },
+  brandContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  logoCircle: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  logoTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: colors.text,
+    letterSpacing: -0.5,
+  },
+  logoSubtitle: {
+    fontSize: 14,
+    color: colors.textMuted,
+    marginTop: 2,
+    fontWeight: '500',
+  },
+  pillBadge: {
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    marginTop: 10,
+  },
+  pillBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: colors.textMuted,
+    letterSpacing: 1,
+  },
+  formCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.04,
+    shadowRadius: 16,
+    elevation: 2,
+  },
+  formTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 20,
+  },
+  inputWrapper: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 6,
+  },
+  inputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+  },
+  inputIcon: {
+    marginRight: 10,
+  },
+  textInput: {
+    flex: 1,
+    paddingVertical: 13,
+    fontSize: 15,
+    color: colors.text,
+    fontWeight: '500',
+  },
+  primaryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 14,
+    paddingVertical: 15,
+    marginTop: 6,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  demoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
+    borderRadius: 14,
+    paddingVertical: 13,
+    marginTop: 12,
+  },
+  demoButtonText: {
+    color: colors.primary,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  copyright: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: colors.textLight,
+    marginTop: 28,
+  },
 });
+

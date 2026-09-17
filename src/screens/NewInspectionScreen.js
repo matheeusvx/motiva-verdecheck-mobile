@@ -1,16 +1,23 @@
-// src/screens/NewInspectionScreen.js
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  View, 
+  ScrollView, 
+  Alert, 
+  TouchableOpacity 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
-import PrimaryButton from '../components/PrimaryButton';
 import { useInspection } from '../contexts/InspectionContext';
 import { colors } from '../utils/theme';
 
 const areaOptions = [
-  { key: 'area_nobre', label: 'Área Nobre', desc: 'Perímetros urbanos e trevos' },
-  { key: 'faixa_comum', label: 'Faixa Domínio', desc: 'Marginais de escoamento' },
-  { key: 'canteiro_central', label: 'Canteiro Central', desc: 'Divisores de fluxo de pista' },
-  { key: 'encosta', label: 'Encosta / Talude', desc: 'Áreas de corte e inclinação' }
+  { key: 'area_nobre', label: 'Área Nobre', limit: 'Máx. 30 cm', icon: 'star-outline' },
+  { key: 'faixa_comum', label: 'Faixa de Domínio', limit: 'Máx. 40 cm', icon: 'git-commit-outline' },
+  { key: 'canteiro_central', label: 'Canteiro Central', limit: 'Máx. 30 cm', icon: 'git-compare-outline' },
+  { key: 'encosta', label: 'Encosta / Talude', limit: 'Máx. 60 cm', icon: 'trending-up-outline' },
 ];
 
 export default function NewInspectionScreen({ navigation }) {
@@ -39,235 +46,318 @@ export default function NewInspectionScreen({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPadding} keyboardShouldPersistTaps="handled">
-        
-        {/* Cabeçalho Técnico Premium */}
-        <View style={styles.headerContainer}>
-          <View style={styles.badgeEstilizado}>
-            <Text style={styles.badgeEstilizadoText}>MÓDULO DE CAPTURA</Text>
-          </View>
-          <Text style={styles.title}>Nova Inspeção</Text>
-          <Text style={styles.subtitle}>Insira as coordenadas e o segmento técnico para validação da rede neural.</Text>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollPadding} 
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Cabeçalho */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Nova Vistoria</Text>
+          <Text style={styles.subtitle}>
+            Informe a localização e características da vegetação no trecho da rodovia.
+          </Text>
         </View>
 
-        {/* Card 1: Localização em Grid Balanceado */}
-        <View style={styles.cardForm}>
-          <View style={styles.cardHeaderIndicator}>
-            <View style={styles.indicatorLinha} />
-            <Text style={styles.cardSectionTitle}>Geolocalização do Trecho</Text>
+        {/* Card 1: Identificação do Trecho */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Ionicons name="location-outline" size={18} color={colors.primary} />
+            <Text style={styles.cardTitle}>Localização da Rodovia</Text>
           </View>
 
-          <View style={styles.rowInputs}>
-            <View style={[styles.inputGroup, { flex: 2 }]}>
-              <Text style={styles.inputLabel}>RODOVIA</Text>
-              <TextInput 
-                style={styles.inputInput} 
-                placeholder="Ex: SP-310" 
-                placeholderTextColor="#94A3B8" 
-                value={draft.road} 
-                onChangeText={text => updateDraft({ road: text })} 
+          <View style={styles.row}>
+            <View style={[styles.inputGroup, { flex: 1.3 }]}>
+              <Text style={styles.label}>Rodovia</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: SP-310"
+                placeholderTextColor={colors.textLight}
+                value={draft.road}
+                onChangeText={text => updateDraft({ road: text })}
               />
             </View>
 
-            <View style={[styles.inputGroup, { flex: 1.5 }]}>
-              <Text style={styles.inputLabel}>QUILÔMETRO</Text>
-              <TextInput 
-                style={styles.inputInput} 
-                placeholder="Ex: 142" 
-                placeholderTextColor="#94A3B8" 
-                value={draft.km} 
-                onChangeText={text => updateDraft({ km: text })} 
-                keyboardType="numeric" 
+            <View style={[styles.inputGroup, { flex: 1 }]}>
+              <Text style={styles.label}>Quilômetro</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 142"
+                placeholderTextColor={colors.textLight}
+                value={draft.km}
+                onChangeText={text => updateDraft({ km: text })}
+                keyboardType="numeric"
               />
             </View>
-          </View>
-
-          <View style={[styles.inputGroup, { marginBottom: 4 }]}>
-            <Text style={styles.inputLabel}>SENTIDO OPERACIONAL</Text>
-            <TextInput 
-              style={styles.inputInput} 
-              placeholder="Ex: Norte (Interior)" 
-              placeholderTextColor="#94A3B8" 
-              value={draft.direction} 
-              onChangeText={text => updateDraft({ direction: text })} 
-            />
-          </View>
-        </View>
-
-        {/* Seção 2: Segmentação por Lista Técnica (Substituindo Chips Soltos) */}
-        <Text style={styles.blockTitle}>SEGMENTO DA FAIXA DE DOMÍNIO</Text>
-        <View style={styles.listaSegmentos}>
-          {areaOptions.map(option => {
-            const isSelected = draft.areaType === option.key;
-            return (
-              <TouchableOpacity
-                key={option.key}
-                activeOpacity={0.8}
-                onPress={() => updateDraft({ areaType: option.key })}
-                style={[styles.segmentoLinha, isSelected && styles.segmentoLinhaSelected]}
-              >
-                <View style={styles.segmentoInfoLeft}>
-                  {/* Marcador Geométrico estilo Radio Button profissional */}
-                  <View style={[styles.radioOuter, isSelected && styles.radioOuterSelected]}>
-                    {isSelected && <View style={styles.radioInner} />}
-                  </View>
-                  <View>
-                    <Text style={[styles.segmentoLabel, isSelected && styles.segmentoLabelSelected]}>
-                      {option.label}
-                    </Text>
-                    <Text style={styles.segmentoDesc}>{option.desc}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        {/* Card 3: Parâmetros de Entrada da IA */}
-        <View style={styles.cardForm}>
-          <View style={styles.cardHeaderIndicator}>
-            <View style={[styles.indicatorLinha, { backgroundColor: colors.secondary || '#0EA5E9' }]} />
-            <Text style={styles.cardSectionTitle}>Métricas Iniciais</Text>
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>ALTURA ESTIMADA DA VEGETAÇÃO (CM)</Text>
-            <TextInput 
-              style={styles.inputInput} 
-              placeholder="Ex: 120" 
-              placeholderTextColor="#94A3B8" 
-              value={draft.estimatedHeight} 
-              onChangeText={text => updateDraft({ estimatedHeight: text })} 
-              keyboardType="numeric" 
-            />
-          </View>
-
-          <View style={[styles.inputGroup, { marginBottom: 4 }]}>
-            <Text style={styles.inputLabel}>OBSERVAÇÕES DO INSPETOR</Text>
-            <TextInput 
-              style={[styles.inputInput, styles.textArea]} 
-              placeholder="Descreva pontos de referência físicos, condições climáticas ou barreiras visuais..." 
-              placeholderTextColor="#94A3B8" 
-              value={draft.notes} 
-              onChangeText={text => updateDraft({ notes: text })} 
-              multiline 
+            <Text style={styles.label}>Sentido da Pista</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: Norte (Interior) ou Sul (Capital)"
+              placeholderTextColor={colors.textLight}
+              value={draft.direction}
+              onChangeText={text => updateDraft({ direction: text })}
             />
           </View>
         </View>
 
-        <View style={styles.actionContainer}>
-          <PrimaryButton label="Ativar Scanner Computacional" onPress={handleContinue} />
+        {/* Card 2: Segmento Viário (Tipo de Área) */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Ionicons name="layers-outline" size={18} color={colors.primary} />
+            <Text style={styles.cardTitle}>Tipo de Segmento Viário</Text>
+          </View>
+
+          <View style={styles.areaGrid}>
+            {areaOptions.map(option => {
+              const isSelected = draft.areaType === option.key;
+              return (
+                <TouchableOpacity
+                  key={option.key}
+                  style={[styles.areaOption, isSelected && styles.areaOptionSelected]}
+                  onPress={() => updateDraft({ areaType: option.key })}
+                  activeOpacity={0.8}
+                >
+                  <View style={styles.areaTopRow}>
+                    <Ionicons 
+                      name={option.icon} 
+                      size={20} 
+                      color={isSelected ? colors.primary : colors.textMuted} 
+                    />
+                    {isSelected ? (
+                      <Ionicons name="checkmark-circle" size={18} color={colors.primary} />
+                    ) : (
+                      <View style={styles.emptyCircle} />
+                    )}
+                  </View>
+                  <Text style={[styles.areaLabel, isSelected && styles.areaLabelSelected]}>
+                    {option.label}
+                  </Text>
+                  <Text style={styles.areaLimit}>{option.limit}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
-        
+
+        {/* Card 3: Estimativa e Observações */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Ionicons name="speedometer-outline" size={18} color={colors.primary} />
+            <Text style={styles.cardTitle}>Altura da Vegetação</Text>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Altura Estimada (em centímetros)</Text>
+            <View style={styles.heightInputBox}>
+              <TextInput
+                style={styles.heightInput}
+                placeholder="Ex: 85"
+                placeholderTextColor={colors.textLight}
+                value={draft.estimatedHeight}
+                onChangeText={text => updateDraft({ estimatedHeight: text })}
+                keyboardType="numeric"
+              />
+              <View style={styles.unitBadge}>
+                <Text style={styles.unitBadgeText}>cm</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Observações de Campo (Opcional)</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="Ex: Trecho próximo a curva, mato encroado na mureta..."
+              placeholderTextColor={colors.textLight}
+              value={draft.notes}
+              onChangeText={text => updateDraft({ notes: text })}
+              multiline
+            />
+          </View>
+        </View>
+
+        {/* Botão de Avanço */}
+        <TouchableOpacity 
+          style={styles.submitButton} 
+          onPress={handleContinue}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.submitButtonText}>Avançar para Fotografia</Text>
+          <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+        </TouchableOpacity>
+
       </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollPadding: { paddingBottom: 50, paddingTop: 8 },
-  
-  // Cabeçalho de Design Executivo
-  headerContainer: { marginBottom: 26 },
-  badgeEstilizado: {
-    backgroundColor: '#E0E7FF',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 6,
-    alignSelf: 'flex-start',
-    marginBottom: 8
+  scrollPadding: { 
+    paddingHorizontal: 20, 
+    paddingTop: 16, 
+    paddingBottom: 40 
   },
-  badgeEstilizadoText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: colors.primary,
-    letterSpacing: 1
+  header: { 
+    marginBottom: 20 
   },
-  title: { fontSize: 28, fontWeight: '900', color: colors.text, letterSpacing: -0.5 },
-  subtitle: { color: colors.textMuted, fontSize: 14, marginTop: 4, lineHeight: 22, fontWeight: '500' },
-  
-  // Cards Estruturais do Formulário
-  cardForm: { 
-    backgroundColor: colors.surface, 
-    borderRadius: 20, 
-    padding: 20, 
-    marginBottom: 22, 
-    borderWidth: 1, 
-    borderColor: colors.border,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.03,
-    shadowRadius: 12,
-    elevation: 2
+  title: { 
+    fontSize: 26, 
+    fontWeight: '800', 
+    color: colors.text,
+    letterSpacing: -0.5 
   },
-  cardHeaderIndicator: { flexDirection: 'row', alignItems: 'center', marginBottom: 18 },
-  indicatorLinha: { width: 4, height: 16, backgroundColor: colors.primary, borderRadius: 2, marginRight: 8 },
-  cardSectionTitle: { fontSize: 15, fontWeight: '700', color: colors.text },
-  
-  // Grid de Inputs Paralelos
-  rowInputs: { flexDirection: 'row', gap: 14, marginBottom: 14 },
-  inputGroup: { marginBottom: 16 },
-  inputLabel: { fontSize: 11, fontWeight: '700', color: colors.textMuted, marginBottom: 8, letterSpacing: 0.3 },
-  inputInput: { 
-    backgroundColor: '#F8FAFC', 
-    borderWidth: 1, 
-    borderColor: colors.border, 
-    borderRadius: 12, 
-    paddingHorizontal: 16, 
-    paddingVertical: 14, 
-    fontSize: 15, 
-    color: colors.text, 
-    fontWeight: '600' 
+  subtitle: { 
+    fontSize: 14, 
+    color: colors.textMuted, 
+    marginTop: 4, 
+    lineHeight: 20 
   },
-  textArea: { minHeight: 85, textAlignVertical: 'top', lineHeight: 20 },
-
-  // Listagem Premium de Tipos de Segmento (Substituindo Emojis e Grid Antigo)
-  blockTitle: { fontSize: 11, fontWeight: '800', color: colors.textMuted, letterSpacing: 1.2, marginBottom: 12, marginLeft: 2 },
-  listaSegmentos: { marginBottom: 24, gap: 10 },
-  segmentoLinha: {
-    backgroundColor: colors.surface,
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 16,
-    padding: 16,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.03,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.01,
-    shadowRadius: 4,
-    elevation: 1
+    gap: 8,
+    marginBottom: 16,
   },
-  segmentoLinhaSelected: {
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  inputGroup: {
+    marginBottom: 14,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.textMuted,
+    marginBottom: 6,
+  },
+  input: {
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: colors.text,
+    fontWeight: '500',
+  },
+  textArea: {
+    minHeight: 70,
+    textAlignVertical: 'top',
+  },
+  areaGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  areaOption: {
+    width: '48%',
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    padding: 14,
+  },
+  areaOptionSelected: {
+    backgroundColor: colors.primaryLight,
     borderColor: colors.primary,
-    backgroundColor: '#F5F3FF', // Roxo corporativo ultra leve de fundo
-    borderWidth: 1.5
   },
-  segmentoInfoLeft: { flexDirection: 'row', alignItems: 'center', gap: 14, flex: 1 },
-  
-  // Elemento Geométrico do Radio Button Customizado
-  radioOuter: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#CBD5E1',
+  areaTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center'
+    marginBottom: 8,
   },
-  radioOuterSelected: {
-    borderColor: colors.primary
+  emptyCircle: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: '#CBD5E1',
   },
-  radioInner: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: colors.primary
+  areaLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 2,
   },
-  segmentoLabel: { fontSize: 15, fontWeight: '600', color: colors.text },
-  segmentoLabelSelected: { color: colors.primary, fontWeight: '700' },
-  segmentoDesc: { fontSize: 12, color: colors.textMuted, marginTop: 2, paddingRight: 10 },
-
-  actionContainer: { marginTop: 4 }
+  areaLabelSelected: {
+    color: colors.primary,
+  },
+  areaLimit: {
+    fontSize: 11,
+    color: colors.textMuted,
+    fontWeight: '500',
+  },
+  heightInputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: 12,
+    paddingLeft: 14,
+    paddingRight: 8,
+    paddingVertical: 4,
+  },
+  heightInput: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.text,
+    paddingVertical: 8,
+  },
+  unitBadge: {
+    backgroundColor: '#E2E8F0',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  unitBadgeText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: colors.textMuted,
+  },
+  submitButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+    paddingVertical: 16,
+    marginTop: 4,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
 });

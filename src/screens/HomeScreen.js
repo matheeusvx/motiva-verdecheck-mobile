@@ -1,27 +1,20 @@
-// src/screens/HomeScreen.js
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useInspection } from '../contexts/InspectionContext';
-
+import { colors } from '../utils/theme';
 
 export default function HomeScreen({ navigation }) {
-  // Consumindo os dados e funções reais do seu arquivo de contexto
   const { history, user, logoutUser } = useInspection();
 
-  // Lógica de filtragem baseada nos dados do Context
-  const todayCount = history ? history.filter(item => {
-    const hojeString = new Date().toLocaleDateString('pt-BR');
-    return item.date === hojeString;
-  }).length : 0;
-
-  const temTrechoCritico = history ? history.some(item => 
+  const totalCount = history ? history.length : 0;
+  const criticalCount = history ? history.filter(item => 
     item.status === 'Cortar' || item.status === 'Crítico' || item.severity === 'Crítico'
-  ) : false;
+  ).length : 0;
+  const okCount = totalCount - criticalCount;
 
   const handleLogout = async () => {
     try {
-      // Apenas limpa o estado global. O AppNavigator vai detectar 
-      // que o nome voltou a ser 'Inspetor' e mudará para a tela de Login sozinho.
       await logoutUser();
     } catch (error) {
       console.warn('Erro ao deslogar', error);
@@ -32,111 +25,89 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <ScrollView 
         showsVerticalScrollIndicator={false} 
-        contentContainerStyle={styles.scrollPadding}
+        contentContainerStyle={styles.scrollContent}
       >
-        
-        {/* Topo Operacional */}
-        <View style={styles.headerContainer}>
+        {/* Cabeçalho do Inspetor */}
+        <View style={styles.header}>
           <View>
-            <Text style={styles.welcomeText}>Painel Operacional</Text>
-            <Text style={styles.title}>Olá, {user?.name || 'Inspetor'}</Text>
+            <Text style={styles.greeting}>Olá, {user?.name || 'Inspetor'}</Text>
+            <Text style={styles.userRole}>Inspetor Operacional • CCR Motiva</Text>
           </View>
-          <View style={styles.userAvatar}>
-            <Text style={styles.avatarText}>
-              {(user?.name || 'I').charAt(0).toUpperCase()}
-            </Text>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarLetter}>{(user?.name || 'I').charAt(0).toUpperCase()}</Text>
           </View>
         </View>
 
-        {/* Card de Alerta de Intervenção */}
-        {temTrechoCritico && (
-          <TouchableOpacity 
-            style={styles.alertBanner} 
-            onPress={() => navigation.navigate('Histórico')}
-            activeOpacity={0.9}
-          >
-            <View style={styles.alertContentRow}>
-              <View style={styles.shieldMock}>
-                <Text style={styles.alertIcon}>⚠️</Text>
-              </View>
-              <View style={styles.alertTexts}>
-                <Text style={styles.alertTitle}>Intervenção Necessária</Text>
-                <Text style={styles.alertMessage}>Trechos críticos detectados na malha viária. Toque para agir.</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-
-        {/* Card Dashboard de Métricas */}
-        <View style={styles.heroCard}>
-          <View style={styles.heroLeft}>
-            <Text style={styles.heroLabel}>INSPEÇÕES DE HOJE</Text>
-            <Text style={styles.heroValue}>{todayCount}</Text>
-            <Text style={styles.heroStatus}>Sincronizado com a Nuvem</Text>
+        {/* Resumo Rápido das Vistorias */}
+        <View style={styles.summaryCard}>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryNumber}>{totalCount}</Text>
+            <Text style={styles.summaryLabel}>Total salvas</Text>
           </View>
-          
-          <View style={styles.glassGraphicMock}>
-            <View style={[styles.mockBar, { height: '35%' }]} />
-            <View style={[styles.mockBar, { height: '55%', backgroundColor: '#C084FC', opacity: 0.9 }]} />
-            <View style={[styles.mockBar, { height: '85%' }]} />
+          <View style={styles.summaryDivider} />
+          <View style={styles.summaryItem}>
+            <Text style={[styles.summaryNumber, { color: colors.error }]}>{criticalCount}</Text>
+            <Text style={styles.summaryLabel}>Para roçada</Text>
+          </View>
+          <View style={styles.summaryDivider} />
+          <View style={styles.summaryItem}>
+            <Text style={[styles.summaryNumber, { color: colors.success }]}>{okCount}</Text>
+            <Text style={styles.summaryLabel}>Conformes</Text>
           </View>
         </View>
 
-        <Text style={styles.sectionDivider}>AÇÕES DISPONÍVEIS</Text>
-
-        {/* Bloco 1: Nova Análise */}
-        <View style={styles.card}>
-          <View style={styles.cardHeaderIconRow}>
-            <View style={styles.iconCircleWrapper}>
-              <Text style={styles.cardActionIcon}>🌱</Text>
+        {/* Ação Principal: Nova Vistoria */}
+        <TouchableOpacity 
+          style={styles.heroActionCard}
+          onPress={() => navigation.navigate('Nova Análise')}
+          activeOpacity={0.9}
+        >
+          <View style={styles.heroActionHeader}>
+            <View style={styles.heroIconCircle}>
+              <Ionicons name="camera" size={26} color="#FFFFFF" />
             </View>
-            <Text style={styles.cardTitle}>Nova Análise de Trecho</Text>
+            <View style={styles.heroBadge}>
+              <Text style={styles.heroBadgeText}>INTELIGÊNCIA ARTIFICIAL</Text>
+            </View>
           </View>
-          
-          <Text style={styles.cardText}>
-            Abra a câmera inteligente para escanear e classificar a altura da vegetação na faixa de domínio.
+
+          <Text style={styles.heroTitle}>Nova Vistoria de Campo</Text>
+          <Text style={styles.heroSubtitle}>
+            Fotografe a grama da faixa de domínio e receba a recomendação instantânea de corte.
           </Text>
-          
-          <View style={styles.buttonSpacer}>
-            <TouchableOpacity 
-              style={styles.nativePrimaryButton}
-              onPress={() => navigation.navigate('Nova Análise')}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.nativePrimaryButtonText}>Abrir Scanner IA</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
 
-        {/* Bloco 2: Histórico */}
-        <View style={styles.card}>
-          <View style={styles.cardHeaderIconRow}>
-            <View style={[styles.iconCircleWrapper, { backgroundColor: '#FAE8FF' }]}>
-              <Text style={styles.cardActionIcon}>📂</Text>
+          <View style={styles.heroButton}>
+            <Text style={styles.heroButtonText}>Iniciar Vistoria Agora</Text>
+            <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+          </View>
+        </TouchableOpacity>
+
+        {/* Ação Secundária: Histórico */}
+        <TouchableOpacity 
+          style={styles.secondaryCard}
+          onPress={() => navigation.navigate('Histórico')}
+          activeOpacity={0.85}
+        >
+          <View style={styles.secondaryHeader}>
+            <View style={styles.secondaryIconCircle}>
+              <Ionicons name="document-text-outline" size={22} color={colors.primary} />
             </View>
-            <Text style={styles.cardTitle}>Histórico de Evidências</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.secondaryTitle}>Consultar Histórico</Text>
+              <Text style={styles.secondarySubtitle}>Acesse fotos, relatórios e laudos anteriores</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={colors.textLight} />
           </View>
-          
-          <Text style={styles.cardText}>
-            Verifique os relatórios, fotos salvas e status de conformidade das vistorias anteriores.
-          </Text>
-          
-          <TouchableOpacity 
-            style={styles.secondaryButton}
-            onPress={() => navigation.navigate('Histórico')}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.secondaryButtonText}>Ver Registros</Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
 
-        {/* Botão de Logout Corporativo */}
+        {/* Botão de Logout Discreto */}
         <TouchableOpacity 
           style={styles.logoutButton} 
           onPress={handleLogout} 
           activeOpacity={0.7}
         >
-          <Text style={styles.logoutText}>🚪 Encerrar Sessão Operacional</Text>
+          <Ionicons name="log-out-outline" size={18} color={colors.textMuted} />
+          <Text style={styles.logoutText}>Encerrar Sessão</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -145,39 +116,205 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
-  scrollPadding: { paddingHorizontal: 20, paddingBottom: 40, paddingTop: 20 },
-  headerContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-  welcomeText: { fontSize: 14, color: '#94A3B8', fontWeight: '600' },
-  title: { fontSize: 28, fontWeight: '800', color: '#2E1065', marginTop: 2 },
-  userAvatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#4C1D95', alignItems: 'center', justifyContent: 'center' },
-  avatarText: { color: '#FFFFFF', fontWeight: '700', fontSize: 16 },
-  alertBanner: { backgroundColor: '#FFFFFF', borderRadius: 24, padding: 16, marginBottom: 24, borderWidth: 1.5, borderColor: '#FEE2E2', borderLeftWidth: 5, borderLeftColor: '#EF4444', shadowColor: '#1E293B', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.04, shadowRadius: 15, elevation: 3 },
-  alertContentRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  shieldMock: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FEE2E2', alignItems: 'center', justifyContent: 'center' },
-  alertIcon: { fontSize: 18 },
-  alertTexts: { flex: 1 },
-  alertTitle: { fontSize: 16, fontWeight: '700', color: '#991B1B' },
-  alertMessage: { fontSize: 13, color: '#991B1B', marginTop: 2, lineHeight: 18, opacity: 0.8 },
-  heroCard: { backgroundColor: '#2E1065', borderRadius: 28, padding: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, shadowColor: '#2E1065', shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.25, shadowRadius: 20, elevation: 6 },
-  heroLeft: { flex: 1 },
-  heroLabel: { color: '#E9D5FF', fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
-  heroValue: { color: '#FFFFFF', fontSize: 58, fontWeight: '800', marginVertical: 2 },
-  heroStatus: { color: '#DDD6FE', fontSize: 12, fontWeight: '500', marginTop: 2 },
-  glassGraphicMock: { width: 64, height: 64, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.08)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', flexDirection: 'row', gap: 6, alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 10 },
-  mockBar: { width: 8, borderRadius: 3, backgroundColor: '#FFFFFF', opacity: 0.4 },
-  sectionDivider: { fontSize: 12, fontWeight: '700', color: '#94A3B8', letterSpacing: 1, marginBottom: 16, marginLeft: 6 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 28, padding: 24, marginBottom: 20, borderWidth: 1, borderColor: '#F1F5F9', shadowColor: '#3B0764', shadowOffset: { width: 0, height: 14 }, shadowOpacity: 0.04, shadowRadius: 24, elevation: 4 },
-  cardHeaderIconRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 14 },
-  iconCircleWrapper: { width: 42, height: 42, borderRadius: 14, backgroundColor: '#ECFDF5', alignItems: 'center', justifyContent: 'center' },
-  cardActionIcon: { fontSize: 20 },
-  cardTitle: { fontSize: 19, fontWeight: '800', color: '#2E1065', letterSpacing: -0.3 },
-  cardText: { color: '#64748B', fontSize: 14, lineHeight: 22, fontWeight: '500', paddingRight: 4 },
-  buttonSpacer: { marginTop: 20 },
-  nativePrimaryButton: { backgroundColor: '#4C1D95', borderRadius: 18, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
-  nativePrimaryButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
-  secondaryButton: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: '#DDD6FE', borderRadius: 18, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 20 },
-  secondaryButtonText: { color: '#4C1D95', fontSize: 15, fontWeight: '700' },
-  logoutButton: { marginTop: 12, alignItems: 'center', paddingVertical: 16, borderRadius: 18, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E2E8F0', marginBottom: 20 },
-  logoutText: { color: '#64748B', fontWeight: '700', fontSize: 14 }
+  container: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 24,
+    paddingBottom: 36,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  greeting: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: colors.text,
+    letterSpacing: -0.5,
+  },
+  userRole: {
+    fontSize: 13,
+    color: colors.textMuted,
+    marginTop: 2,
+    fontWeight: '500',
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  avatarLetter: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '800',
+  },
+  summaryCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  summaryItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  summaryDivider: {
+    width: 1,
+    height: '70%',
+    backgroundColor: '#E2E8F0',
+    alignSelf: 'center',
+  },
+  summaryNumber: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: colors.text,
+  },
+  summaryLabel: {
+    fontSize: 11,
+    color: colors.textMuted,
+    fontWeight: '600',
+    marginTop: 2,
+  },
+  heroActionCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 22,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: '#A7F3D0',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 3,
+  },
+  heroActionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  heroIconCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroBadge: {
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  heroBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: colors.primary,
+    letterSpacing: 0.6,
+  },
+  heroTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: colors.text,
+    marginBottom: 6,
+  },
+  heroSubtitle: {
+    fontSize: 14,
+    color: colors.textMuted,
+    lineHeight: 20,
+    marginBottom: 20,
+  },
+  heroButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 14,
+  },
+  heroButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  secondaryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.02,
+    shadowRadius: 8,
+    elevation: 1,
+  },
+  secondaryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  secondaryIconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  secondarySubtitle: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 14,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  logoutText: {
+    color: colors.textMuted,
+    fontWeight: '600',
+    fontSize: 13,
+  },
 });
+
+
+

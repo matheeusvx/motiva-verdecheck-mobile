@@ -17,63 +17,49 @@ import CameraMockScreen from '../screens/CameraMockScreen';
 import ProcessingScreen from '../screens/ProcessingScreen';
 import ResultScreen from '../screens/ResultScreen';
 import InspectionDetailScreen from '../screens/InspectionDetailScreen';
-
+import { Ionicons } from '@expo/vector-icons';
+import { colors } from '../utils/theme';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-// Componente de Ícone Customizado usando Emojis
-function TabIcon({ focused, type }) {
-  let emoji = '🏠';
-  if (type === 'analise') emoji = '🌱';
-  if (type === 'historico') emoji = '📂';
-
-  return (
-    <View style={[styles.tabIconContainer, focused && styles.tabIconActive]}>
-      <Text style={{ fontSize: 18 }}>{emoji}</Text>
-    </View>
-  );
-}
 
 // Menu de Abas Inferiores (Bottom Tab Navigator)
 function MainTabs() {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: '#4C1D95',
-        tabBarInactiveTintColor: '#64748B',
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '600', marginBottom: 4 },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textLight,
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '700', marginBottom: 6 },
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
-          borderTopColor: '#E2E8F0',
+          borderTopColor: colors.border,
           height: 64,
-          paddingTop: 4,
+          paddingTop: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.03,
+          shadowRadius: 8,
+          elevation: 4,
         },
-      }}
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Início') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Nova Análise') {
+            iconName = focused ? 'scan' : 'scan-outline';
+          } else if (route.name === 'Histórico') {
+            iconName = focused ? 'document-text' : 'document-text-outline';
+          }
+          return <Ionicons name={iconName} size={22} color={color} />;
+        },
+      })}
     >
-      <Tab.Screen 
-        name="Início" 
-        component={HomeScreen} 
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} type="home" />
-        }}
-      />
-      <Tab.Screen 
-        name="Nova Análise" 
-        component={NewInspectionScreen} 
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} type="analise" />
-        }}
-      />
-      <Tab.Screen 
-        name="Histórico" 
-        component={HistoryScreen} 
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} type="historico" />
-        }}
-      />
+      <Tab.Screen name="Início" component={HomeScreen} />
+      <Tab.Screen name="Nova Análise" component={NewInspectionScreen} />
+      <Tab.Screen name="Histórico" component={HistoryScreen} />
     </Tab.Navigator>
   );
 }
@@ -86,7 +72,7 @@ export default function AppNavigator() {
   if (!user) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4C1D95" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }

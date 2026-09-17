@@ -1,7 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  ScrollView, 
+  TouchableOpacity, 
+  Alert 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
-import PrimaryButton from '../components/PrimaryButton';
 import StatusBadge from '../components/StatusBadge';
 import { colors } from '../utils/theme';
 
@@ -11,8 +19,15 @@ export default function InspectionDetailScreen({ route, navigation }) {
   if (!item) {
     return (
       <ScreenContainer>
-        <Text style={styles.title}>Inspeção não encontrada</Text>
-        <PrimaryButton label="Voltar" onPress={() => navigation.goBack()} />
+        <View style={{ padding: 24, alignItems: 'center' }}>
+          <Text style={styles.title}>Vistoria não encontrada</Text>
+          <TouchableOpacity 
+            style={styles.backButton} 
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
       </ScreenContainer>
     );
   }
@@ -22,27 +37,29 @@ export default function InspectionDetailScreen({ route, navigation }) {
 
   const handleShare = () => {
     Alert.alert(
-      'Relatório Gerado com Sucesso',
-      `O laudo técnico do trecho ${item.road} (KM ${item.km}) com recomendação "${item.status}" foi compilado e está pronto para repasse à supervisão de conservação CCR Motiva.`,
+      'Laudo CCR Motiva Gerado',
+      `O relatório técnico do trecho ${item.road} (KM ${item.km}) com recomendação "${item.status}" está pronto para repasse à equipe operacional.`,
       [{ text: 'OK' }]
     );
   };
 
   return (
     <ScreenContainer>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPadding}>
-        {/* Barra Superior de Navegação */}
-        <View style={styles.topNav}>
-          <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={() => navigation.goBack()}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.backButtonText}>← Voltar ao Histórico</Text>
-          </TouchableOpacity>
-        </View>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollPadding}
+      >
+        {/* Voltar */}
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="arrow-back" size={18} color={colors.textMuted} />
+          <Text style={styles.backButtonText}>Voltar ao Histórico</Text>
+        </TouchableOpacity>
 
-        {/* Visualizador de Imagem com Evidência */}
+        {/* Imagem / Evidência */}
         <View style={styles.imageContainer}>
           {item.imageUri ? (
             <Image 
@@ -51,173 +68,198 @@ export default function InspectionDetailScreen({ route, navigation }) {
               resizeMode="cover" 
             />
           ) : (
-            <View style={styles.imageMock}>
-              <Text style={styles.imageMockIcon}>📸</Text>
-              <Text style={styles.imageMockText}>Evidência Fotográfica Registrada</Text>
+            <View style={styles.imagePlaceholder}>
+              <Ionicons name="camera-outline" size={36} color={colors.textLight} />
+              <Text style={styles.imagePlaceholderText}>Sem registro fotográfico</Text>
             </View>
           )}
-          <View style={styles.imageTag}>
-            <Text style={styles.imageTagText}>EVIDÊNCIA AUDITADA</Text>
+          <View style={styles.imageBadge}>
+            <Text style={styles.imageBadgeText}>EVIDÊNCIA EM CAMPO</Text>
           </View>
         </View>
 
-        {/* Cabeçalho do Trecho */}
+        {/* Título e Badge */}
         <View style={styles.headerBox}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.title}>{item.road} — KM {item.km}</Text>
+            <Text style={styles.subtitle}>Auditado em {formattedDate}</Text>
+          </View>
           <StatusBadge status={item.status} severity={item.severity} />
-          <Text style={styles.title}>{item.road} — KM {item.km}</Text>
-          <Text style={styles.subtitle}>Vistoriado em {formattedDate}</Text>
         </View>
 
         {/* Card: Diagnóstico da IA */}
         <View style={styles.card}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardIcon}>🧠</Text>
+          <View style={styles.cardHeader}>
+            <Ionicons name="analytics-outline" size={18} color={colors.primary} />
             <Text style={styles.cardTitle}>Diagnóstico Computacional</Text>
           </View>
+          
           <Text style={styles.justificationText}>
-            {item.justification || 'Análise de conformidade operacional realizada com base nos parâmetros da malha viária.'}
+            {item.justification || 'Análise de conformidade operacional realizada com base nas normas CCR.'}
           </Text>
+
           <View style={styles.confidenceRow}>
-            <Text style={styles.confidenceLabel}>Nível de Confiança:</Text>
+            <Text style={styles.confidenceLabel}>Confiança da Inferência</Text>
             <Text style={styles.confidenceValue}>{confidencePercent}%</Text>
           </View>
         </View>
 
-        {/* Card: Dados Técnicos do Trecho */}
+        {/* Card: Dados Técnicos */}
         <View style={styles.card}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardIcon}>📍</Text>
-            <Text style={styles.cardTitle}>Parâmetros Operacionais</Text>
+          <View style={styles.cardHeader}>
+            <Ionicons name="list-outline" size={18} color={colors.primary} />
+            <Text style={styles.cardTitle}>Parâmetros do Trecho</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Sentido da Via</Text>
             <Text style={styles.detailValue}>{item.direction || '-'}</Text>
           </View>
+
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Segmento da Faixa</Text>
+            <Text style={styles.detailLabel}>Segmento Viário</Text>
             <Text style={styles.detailValue}>{item.areaLabel || item.areaType || '-'}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Altura Estimada</Text>
-            <Text style={styles.detailValue}>{item.estimatedHeight ? `${item.estimatedHeight} cm` : '-'}</Text>
+
+          <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
+            <Text style={styles.detailLabel}>Altura Registrada</Text>
+            <Text style={[styles.detailValue, { fontWeight: '800' }]}>
+              {item.estimatedHeight ? `${item.estimatedHeight} cm` : '-'}
+            </Text>
           </View>
         </View>
 
-        {/* Card: Observações do Inspetor */}
-        <View style={styles.card}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardIcon}>📝</Text>
-            <Text style={styles.cardTitle}>Notas de Campo</Text>
+        {/* Card: Observações */}
+        {item.notes ? (
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Ionicons name="document-text-outline" size={18} color={colors.primary} />
+              <Text style={styles.cardTitle}>Observações do Inspetor</Text>
+            </View>
+            <Text style={styles.notesText}>{item.notes}</Text>
           </View>
-          <Text style={styles.cardText}>
-            {item.notes ? item.notes : 'Nenhuma observação complementar registrada.'}
-          </Text>
-        </View>
+        ) : null}
 
-        {/* Ação de Exportar / Compartilhar */}
-        <View style={styles.buttonContainer}>
-          <PrimaryButton 
-            label="📤 Encaminhar para Supervisão" 
-            variant="secondary" 
-            onPress={handleShare} 
-          />
-        </View>
+        {/* Botão Compartilhar */}
+        <TouchableOpacity 
+          style={styles.shareButton} 
+          onPress={handleShare}
+          activeOpacity={0.85}
+        >
+          <Ionicons name="share-social-outline" size={18} color={colors.primary} />
+          <Text style={styles.shareButtonText}>Compartilhar Laudo com CCR</Text>
+        </TouchableOpacity>
+
       </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollPadding: { paddingBottom: 50, paddingTop: 6 },
-  topNav: { marginBottom: 14 },
+  scrollPadding: { 
+    paddingHorizontal: 20, 
+    paddingTop: 16, 
+    paddingBottom: 40 
+  },
   backButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    alignSelf: 'flex-start'
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 14,
+    alignSelf: 'flex-start',
   },
   backButtonText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: '700'
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textMuted,
   },
   imageContainer: {
     width: '100%',
-    height: 220,
+    height: 200,
     borderRadius: 20,
     overflow: 'hidden',
-    backgroundColor: '#1E293B',
-    marginBottom: 18,
+    backgroundColor: '#0F172A',
+    marginBottom: 16,
     position: 'relative',
     borderWidth: 1,
-    borderColor: colors.border
+    borderColor: '#E2E8F0',
   },
   image: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
-  imageMock: {
+  imagePlaceholder: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#DDD6FE'
+    backgroundColor: '#F1F5F9',
   },
-  imageMockIcon: { fontSize: 36, marginBottom: 8 },
-  imageMockText: { color: colors.primaryDark, fontWeight: '700', fontSize: 13 },
-  imageTag: {
+  imagePlaceholderText: {
+    color: colors.textMuted,
+    fontSize: 13,
+    marginTop: 8,
+  },
+  imageBadge: {
     position: 'absolute',
-    bottom: 12,
-    left: 12,
+    bottom: 10,
+    left: 10,
     backgroundColor: 'rgba(15, 23, 42, 0.8)',
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6
+    borderRadius: 6,
   },
-  imageTagText: { color: '#FFFFFF', fontSize: 9, fontWeight: '800', letterSpacing: 1 },
-  headerBox: { marginBottom: 18 },
+  imageBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 0.8,
+  },
+  headerBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   title: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: '800',
     color: colors.text,
-    marginTop: 8,
-    marginBottom: 2
   },
   subtitle: {
     color: colors.textMuted,
     fontSize: 13,
-    fontWeight: '500'
+    marginTop: 2,
   },
   card: {
-    backgroundColor: colors.surface,
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     padding: 18,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: '#000',
+    borderColor: '#E2E8F0',
+    shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.02,
-    shadowRadius: 6,
-    elevation: 2
+    shadowRadius: 8,
+    elevation: 1,
   },
-  cardHeaderRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
-  cardIcon: { fontSize: 18 },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
   cardTitle: {
-    fontWeight: '800',
+    fontSize: 15,
+    fontWeight: '700',
     color: colors.text,
-    fontSize: 15
-  },
-  cardText: {
-    color: colors.textMuted,
-    lineHeight: 22,
-    fontSize: 14
   },
   justificationText: {
+    fontSize: 14,
     color: colors.text,
     lineHeight: 22,
-    fontSize: 14,
     fontWeight: '500',
-    marginBottom: 12
+    marginBottom: 12,
   },
   confidenceRow: {
     flexDirection: 'row',
@@ -225,19 +267,56 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9'
+    borderTopColor: '#F1F5F9',
   },
-  confidenceLabel: { fontSize: 12, color: colors.textMuted, fontWeight: '600' },
-  confidenceValue: { fontSize: 13, color: colors.primary, fontWeight: '800' },
+  confidenceLabel: {
+    fontSize: 12,
+    color: colors.textMuted,
+    fontWeight: '600',
+  },
+  confidenceValue: {
+    fontSize: 13,
+    color: colors.primary,
+    fontWeight: '800',
+  },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    alignItems: 'center',
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F8FAFC'
+    borderBottomColor: '#F1F5F9',
   },
-  detailLabel: { fontSize: 13, color: colors.textMuted, fontWeight: '500' },
-  detailValue: { fontSize: 13, color: colors.text, fontWeight: '700' },
-  buttonContainer: { marginTop: 8 }
+  detailLabel: {
+    fontSize: 13,
+    color: colors.textMuted,
+    fontWeight: '500',
+  },
+  detailValue: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  notesText: {
+    fontSize: 13,
+    color: colors.textMuted,
+    lineHeight: 20,
+  },
+  shareButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 16,
+    paddingVertical: 15,
+    marginTop: 6,
+  },
+  shareButtonText: {
+    color: colors.primary,
+    fontSize: 15,
+    fontWeight: '700',
+  },
 });
-

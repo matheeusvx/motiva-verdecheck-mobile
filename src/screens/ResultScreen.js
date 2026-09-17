@@ -1,8 +1,14 @@
-// src/screens/ResultScreen.js
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  ScrollView, 
+  Image, 
+  TouchableOpacity 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
-import PrimaryButton from '../components/PrimaryButton';
 import { useInspection } from '../contexts/InspectionContext';
 import { evaluateInspection } from '../utils/mockAnalysis';
 import { colors } from '../utils/theme';
@@ -10,7 +16,6 @@ import { colors } from '../utils/theme';
 export default function ResultScreen({ navigation }) {
   const { draft, saveInspection, resetDraft } = useInspection();
 
-  // Avaliação baseada no segmento e na altura informada
   const evaluation = evaluateInspection(draft);
   const isCut = evaluation.shouldCut;
   const confidenceFormatted = `${Math.round(evaluation.confidence * 100)}%`;
@@ -40,161 +45,269 @@ export default function ResultScreen({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPadding}>
-        <Text style={styles.title}>Diagnóstico</Text>
-        <Text style={styles.subtitle}>Resultado da inferência de visão computacional.</Text>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollPadding}
+      >
+        {/* Cabeçalho */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Diagnóstico da IA</Text>
+          <Text style={styles.subtitle}>
+            Resultado da inferência visual e verificação dos parâmetros da CCR.
+          </Text>
+        </View>
 
-        {/* Card de Resultado Dinâmico (Cortar / Não Cortar) */}
+        {/* Card Principal de Veredito */}
         <View style={[
-          styles.resultCard, 
-          isCut ? styles.resultCardCut : styles.resultCardOk
+          styles.verdictCard, 
+          isCut ? styles.verdictCardCut : styles.verdictCardOk
         ]}>
-          <View style={styles.badgeRow}>
+          <View style={styles.verdictHeader}>
             <View style={[
-              styles.statusBadge, 
-              isCut ? styles.statusBadgeCut : styles.statusBadgeOk
+              styles.verdictBadge,
+              isCut ? styles.verdictBadgeCut : styles.verdictBadgeOk
             ]}>
               <Text style={[
-                styles.statusBadgeText,
-                isCut ? styles.statusBadgeTextCut : styles.statusBadgeTextOk
+                styles.verdictBadgeText,
+                isCut ? styles.verdictBadgeTextCut : styles.verdictBadgeTextOk
               ]}>
-                {isCut ? `RECOMENDAÇÃO: ${evaluation.status.toUpperCase()}` : `RECOMENDAÇÃO: ${evaluation.status.toUpperCase()}`}
+                {isCut ? 'RECOMENDAÇÃO: CORTAR' : 'RECOMENDAÇÃO: NÃO CORTAR'}
               </Text>
             </View>
-            <Text style={styles.severityTag}>
-              {evaluation.severity.toUpperCase()}
-            </Text>
+            <Ionicons 
+              name={isCut ? 'warning' : 'checkmark-circle'} 
+              size={24} 
+              color={isCut ? colors.error : colors.success} 
+            />
           </View>
 
           <Text style={[
-            styles.resultValue, 
-            { color: isCut ? (colors.error || '#DC2626') : (colors.success || '#16A34A') }
+            styles.verdictTitle,
+            { color: isCut ? '#991B1B' : '#166534' }
           ]}>
-            {isCut ? 'Intervenção Exigida' : 'Vegetação Conforme'}
+            {isCut ? 'Intervenção Necessária' : 'Vegetação Conforme'}
           </Text>
 
-          <View style={[
-            styles.divider, 
-            { backgroundColor: isCut ? '#FCA5A5' : '#86EFAC' }
-          ]} />
-
           <Text style={[
-            styles.resultDesc, 
+            styles.verdictDesc,
             { color: isCut ? '#7F1D1D' : '#14532D' }
           ]}>
             {evaluation.justification}
           </Text>
         </View>
 
-        {/* Mini Preview da Foto Analisada */}
+        {/* Evidência Fotográfica Avaliada */}
         {draft.imageUri ? (
-          <View style={styles.photoPreviewCard}>
-            <Image source={{ uri: draft.imageUri }} style={styles.previewThumb} resizeMode="cover" />
-            <View style={styles.previewInfo}>
-              <Text style={styles.previewInfoTitle}>Evidência Fotográfica</Text>
-              <Text style={styles.previewInfoSubtitle}>Processada pela rede neural</Text>
+          <View style={styles.evidenceCard}>
+            <Image source={{ uri: draft.imageUri }} style={styles.evidenceThumb} resizeMode="cover" />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.evidenceTitle}>Evidência Analisada</Text>
+              <Text style={styles.evidenceSubtitle}>
+                Confiança do modelo: <Text style={{ fontWeight: '700', color: colors.primary }}>{confidenceFormatted}</Text>
+              </Text>
             </View>
-            <Text style={styles.previewCheck}>✓</Text>
+            <Ionicons name="shield-checkmark" size={22} color={colors.primary} />
           </View>
         ) : null}
 
-        {/* Detalhes Técnicos */}
-        <View style={styles.detailsCard}>
-          <Text style={styles.detailsTitle}>Parâmetros da Análise</Text>
-          <View style={styles.detailRow}>
-            <Text style={styles.dL}>Rodovia e KM</Text>
-            <Text style={styles.dV}>{draft.road} — KM {draft.km}</Text>
+        {/* Tabela de Parâmetros Técnicos */}
+        <View style={styles.paramsCard}>
+          <Text style={styles.paramsTitle}>Parâmetros Verificados</Text>
+
+          <View style={styles.paramRow}>
+            <Text style={styles.paramLabel}>Rodovia / KM</Text>
+            <Text style={styles.paramValue}>{draft.road} — KM {draft.km}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.dL}>Sentido</Text>
-            <Text style={styles.dV}>{draft.direction}</Text>
+
+          <View style={styles.paramRow}>
+            <Text style={styles.paramLabel}>Sentido Operacional</Text>
+            <Text style={styles.paramValue}>{draft.direction}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.dL}>Segmento Viário</Text>
-            <Text style={styles.dV}>{evaluation.label}</Text>
+
+          <View style={styles.paramRow}>
+            <Text style={styles.paramLabel}>Segmento Viário</Text>
+            <Text style={styles.paramValue}>{evaluation.label}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.dL}>Altura Detectada</Text>
-            <Text style={styles.dV}>{evaluation.height} cm</Text>
+
+          <View style={styles.paramRow}>
+            <Text style={styles.paramLabel}>Altura Medida</Text>
+            <Text style={[
+              styles.paramValue, 
+              { color: isCut ? colors.error : colors.success, fontWeight: '800' }
+            ]}>
+              {evaluation.height} cm
+            </Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.dL}>Limite Operacional</Text>
-            <Text style={styles.dV}>Até {evaluation.limit} cm</Text>
-          </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.dL}>Confiança do Diagnóstico</Text>
-            <Text style={[styles.dV, { color: colors.primary }]}>{confidenceFormatted}</Text>
+
+          <View style={[styles.paramRow, { borderBottomWidth: 0 }]}>
+            <Text style={styles.paramLabel}>Tolerância Máxima</Text>
+            <Text style={styles.paramValue}>Até {evaluation.limit} cm</Text>
           </View>
         </View>
 
-        <PrimaryButton label="Salvar e Concluir Inspeção" onPress={handleFinish} />
+        {/* Botão Finalizar */}
+        <TouchableOpacity 
+          style={styles.finishButton} 
+          onPress={handleFinish}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.finishButtonText}>Salvar no Histórico e Concluir</Text>
+          <Ionicons name="checkmark-circle-outline" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+
       </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollPadding: { paddingBottom: 50 },
-  title: { fontSize: 28, fontWeight: '800', color: colors.text },
-  subtitle: { fontSize: 14, color: colors.textMuted, marginBottom: 20 },
-  resultCard: { 
-    padding: 22, 
-    borderRadius: 22, 
-    borderWidth: 1.5, 
-    marginBottom: 16 
+  scrollPadding: { 
+    paddingHorizontal: 20, 
+    paddingTop: 16, 
+    paddingBottom: 40 
   },
-  resultCardCut: { 
-    backgroundColor: '#FEF2F2', 
-    borderColor: '#FCA5A5' 
+  header: { 
+    marginBottom: 20 
   },
-  resultCardOk: { 
-    backgroundColor: '#F0FDF4', 
-    borderColor: '#86EFAC' 
+  title: { 
+    fontSize: 26, 
+    fontWeight: '800', 
+    color: colors.text,
+    letterSpacing: -0.5 
   },
-  badgeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6 },
-  statusBadgeCut: { backgroundColor: '#FEE2E2' },
-  statusBadgeOk: { backgroundColor: '#DCFCE7' },
-  statusBadgeText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
-  statusBadgeTextCut: { color: '#991B1B' },
-  statusBadgeTextOk: { color: '#166534' },
-  severityTag: { fontSize: 11, fontWeight: '700', color: colors.textMuted },
-  resultValue: { fontSize: 28, fontWeight: '800', marginTop: 12, marginBottom: 4 },
-  divider: { height: 1, opacity: 0.4, marginVertical: 14 },
-  resultDesc: { fontSize: 14, lineHeight: 22, fontWeight: '500' },
-  photoPreviewCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 10,
+  subtitle: { 
+    fontSize: 14, 
+    color: colors.textMuted, 
+    marginTop: 4, 
+    lineHeight: 20 
+  },
+  verdictCard: {
+    borderRadius: 22,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1.5,
+  },
+  verdictCardCut: {
+    backgroundColor: '#FEF2F2',
+    borderColor: '#FECACA',
+  },
+  verdictCardOk: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
+  },
+  verdictHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  verdictBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  verdictBadgeCut: {
+    backgroundColor: '#FEE2E2',
+  },
+  verdictBadgeOk: {
+    backgroundColor: '#DCFCE7',
+  },
+  verdictBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  verdictBadgeTextCut: {
+    color: '#991B1B',
+  },
+  verdictBadgeTextOk: {
+    color: '#166534',
+  },
+  verdictTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    marginBottom: 6,
+  },
+  verdictDesc: {
+    fontSize: 14,
+    lineHeight: 22,
+    fontWeight: '500',
+  },
+  evidenceCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 12,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 16
+    borderColor: '#E2E8F0',
   },
-  previewThumb: { width: 54, height: 54, borderRadius: 10 },
-  previewInfo: { flex: 1 },
-  previewInfoTitle: { fontSize: 14, fontWeight: '700', color: colors.text },
-  previewInfoSubtitle: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
-  previewCheck: { fontSize: 18, color: colors.success, fontWeight: '800', marginRight: 8 },
-  detailsCard: { 
-    backgroundColor: '#FFF', 
-    padding: 20, 
-    borderRadius: 20, 
-    borderWidth: 1, 
-    borderColor: colors.border, 
-    marginBottom: 24 
+  evidenceThumb: {
+    width: 52,
+    height: 52,
+    borderRadius: 10,
   },
-  detailsTitle: { fontSize: 15, fontWeight: '800', marginBottom: 14, color: colors.text },
-  detailRow: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    paddingVertical: 10, 
-    borderBottomWidth: 1, 
-    borderBottomColor: '#F8FAFC' 
+  evidenceTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.text,
   },
-  dL: { color: colors.textMuted, fontSize: 13, fontWeight: '500' },
-  dV: { fontWeight: '700', color: colors.text, fontSize: 13 }
+  evidenceSubtitle: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  paramsCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  paramsTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 12,
+  },
+  paramRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 11,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+  },
+  paramLabel: {
+    fontSize: 13,
+    color: colors.textMuted,
+    fontWeight: '500',
+  },
+  paramValue: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  finishButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+    paddingVertical: 16,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  finishButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
 });
-

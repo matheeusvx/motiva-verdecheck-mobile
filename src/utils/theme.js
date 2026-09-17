@@ -1,20 +1,24 @@
 
 export const colors = {
-  primary: '#4F46E5',         // Indigo Moderno
-  primaryGradient: ['#4F46E5', '#6366F1'], // Degradê para os cards principais
-  secondary: '#0EA5E9',       // Azul de suporte para dados técnicos
-  background: '#F1F5F9',      // Cinza ardósia bem sutil que destaca o branco
-  surface: '#FFFFFF',
-  cardSecondary: '#F8FAFC',   // Fundo para sub-caixas internas
-  text: '#0F172A',            // Escuro de alto contraste
-  textMuted: '#475569',       // Cinza escuro legível
-  error: '#DC2626',
-  errorBg: '#FEE2E2',
+  primary: '#047857',         // Verde CCR Motiva Profissional
+  primaryDark: '#064E3B',     // Verde Profundo
+  primaryLight: '#ECFDF5',    // Fundo Verde Suave
+  primaryAccent: '#059669',   // Verde Vibrante
+  secondary: '#0284C7',       // Azul de Apoio Técnico
+  background: '#F8FAFC',      // Fundo Claro, Arejado e Limpo
+  surface: '#FFFFFF',         // Cards Brancos Puros
+  cardSecondary: '#F1F5F9',   // Sub-blocos neutros
+  text: '#0F172A',            // Texto Principal de Alto Contraste
+  textMuted: '#64748B',       // Texto Secundário Legível
+  textLight: '#94A3B8',       // Texto Auxiliar
+  error: '#DC2626',           // Vermelho Alerta
+  errorBg: '#FEF2F2',
   danger: '#DC2626',
-  dangerBg: '#FEE2E2',
-  warning: '#D97706',
-  warningBg: '#FEF3C7',
-  success: '#16A34A',
-  successBg: '#DCFCE7',
-  border: '#E2E8F0'
+  dangerBg: '#FEF2F2',
+  warning: '#D97706',         // Âmbar Atenção
+  warningBg: '#FFFBEB',
+  success: '#059669',         // Verde Sucesso
+  successBg: '#ECFDF5',
+  border: '#E2E8F0',          // Borda Delicada e Suave
+  borderFocus: '#A7F3D0'
 };

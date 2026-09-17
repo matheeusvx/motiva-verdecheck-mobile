@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  ScrollView, 
+  Image, 
+  TouchableOpacity, 
+  Alert 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import ScreenContainer from '../components/ScreenContainer';
-import PrimaryButton from '../components/PrimaryButton';
 import { useInspection } from '../contexts/InspectionContext';
 import { colors } from '../utils/theme';
 
@@ -34,7 +42,7 @@ export default function CameraMockScreen({ navigation }) {
         setSelectedImage(result.assets[0].uri);
       }
     } catch (err) {
-      Alert.alert('Aviso', 'Não foi possível abrir a galeria nativa neste dispositivo. Utilize a simulação de foto.');
+      Alert.alert('Aviso', 'Não foi possível abrir a galeria nativa neste dispositivo. Selecione um cenário de teste.');
     }
   };
 
@@ -56,7 +64,7 @@ export default function CameraMockScreen({ navigation }) {
         setSelectedImage(result.assets[0].uri);
       }
     } catch (err) {
-      Alert.alert('Aviso', 'Câmera nativa indisponível neste ambiente/emulador. Utilize a simulação de foto.');
+      Alert.alert('Aviso', 'Câmera nativa indisponível neste ambiente. Selecione um cenário de teste.');
     }
   };
 
@@ -72,141 +80,336 @@ export default function CameraMockScreen({ navigation }) {
 
   return (
     <ScreenContainer>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPadding}>
-        <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7}>
-            <Text style={styles.backText}>← Voltar aos Dados</Text>
-          </TouchableOpacity>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollPadding}
+      >
+        {/* Voltar */}
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="arrow-back" size={18} color={colors.textMuted} />
+          <Text style={styles.backButtonText}>Alterar Dados do Trecho</Text>
+        </TouchableOpacity>
+
+        {/* Cabeçalho */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Evidência Fotográfica</Text>
+          <Text style={styles.subtitle}>
+            Capture a foto da vegetação ou escolha uma imagem para a inteligência artificial analisar.
+          </Text>
         </View>
 
-        <Text style={styles.title}>Captura de Imagem</Text>
-        <Text style={styles.subtitle}>Fotografe ou selecione uma evidência visual do trecho da rodovia.</Text>
+        {/* Resumo do Trecho */}
+        <View style={styles.summaryBar}>
+          <Ionicons name="navigate-circle-outline" size={18} color={colors.primary} />
+          <Text style={styles.summaryText}>
+            {draft.road || 'SP-310'} • KM {draft.km || '142'} • {draft.direction || 'Sentido Norte'}
+          </Text>
+        </View>
 
-        {/* Visor / Preview */}
+        {/* Visor de Visualização */}
         <View style={styles.viewfinder}>
           {selectedImage ? (
-            <View style={styles.previewBox}>
+            <View style={styles.previewContainer}>
               <Image source={{ uri: selectedImage }} style={styles.previewImage} resizeMode="cover" />
-              <View style={styles.previewOverlayBadge}>
-                <Text style={styles.previewOverlayText}>✓ IMAGEM PRONTA</Text>
+              <View style={styles.previewBadge}>
+                <Ionicons name="checkmark-circle" size={14} color="#34D399" />
+                <Text style={styles.previewBadgeText}>IMAGEM PRONTA</Text>
               </View>
             </View>
           ) : (
             <View style={styles.emptyViewfinder}>
-              <Text style={styles.cameraIcon}>📸</Text>
-              <Text style={styles.cameraTitle}>Nenhuma Foto Capturada</Text>
-              <Text style={styles.cameraText}>
-                Use a câmera do celular, escolha uma foto da galeria ou selecione um cenário rápido abaixo.
-              </Text>
+              <View style={styles.emptyIconCircle}>
+                <Ionicons name="camera-outline" size={32} color="#FFFFFF" />
+              </View>
+              <Text style={styles.emptyTitle}>Nenhuma foto selecionada</Text>
+              <Text style={styles.emptySubtitle}>Tire uma foto ou escolha um dos cenários abaixo</Text>
             </View>
           )}
         </View>
 
-        {/* Resumo do Trecho */}
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryTitle}>Trecho em Análise</Text>
-          <Text style={styles.summaryText}>
-            {draft.road || 'SP-310'} • KM {draft.km || '142'} • {draft.direction || 'Norte'}
-          </Text>
-        </View>
-
-        {/* Ações de Captura Real */}
-        <Text style={styles.sectionLabel}>CAPTURA NATIVA (DISPOSITIVO)</Text>
-        <View style={styles.buttonGroup}>
-          <PrimaryButton label="📷 Abrir Câmera do Celular" onPress={handleTakePhoto} />
-          <View style={{ height: 10 }} />
-          <PrimaryButton label="🖼️ Selecionar da Galeria" variant="secondary" onPress={handlePickFromGallery} />
-        </View>
-
-        {/* Presets Rápidos de Simulação */}
-        <Text style={[styles.sectionLabel, { marginTop: 24 }]}>SIMULAÇÃO RÁPIDA (TESTES E APRESENTAÇÃO)</Text>
-        <View style={styles.presetsRow}>
+        {/* Ações de Captura do Dispositivo */}
+        <View style={styles.actionRow}>
           <TouchableOpacity 
-            style={[styles.presetBtn, selectedImage === MOCK_PRESETS.alto && styles.presetBtnActive]} 
-            onPress={() => handleApplyPreset('alto')}
+            style={styles.actionButton} 
+            onPress={handleTakePhoto} 
             activeOpacity={0.8}
           >
-            <Text style={styles.presetEmoji}>⚠️</Text>
-            <Text style={styles.presetBtnText}>Cenário: Mato Alto</Text>
+            <Ionicons name="camera" size={20} color={colors.primary} />
+            <Text style={styles.actionButtonText}>Abrir Câmera</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={[styles.presetBtn, selectedImage === MOCK_PRESETS.conforme && styles.presetBtnActive]} 
-            onPress={() => handleApplyPreset('conforme')}
+            style={styles.actionButton} 
+            onPress={handlePickFromGallery} 
             activeOpacity={0.8}
           >
-            <Text style={styles.presetEmoji}>🌱</Text>
-            <Text style={styles.presetBtnText}>Cenário: Conforme</Text>
+            <Ionicons name="images" size={20} color={colors.primary} />
+            <Text style={styles.actionButtonText}>Abrir Galeria</Text>
           </TouchableOpacity>
+        </View>
+
+        {/* Cenários de Demonstração / Banca */}
+        <View style={styles.demoCard}>
+          <Text style={styles.demoTitle}>Cenários Rápidos de Demonstração</Text>
+          <Text style={styles.demoSubtitle}>Toque para testar os dois fluxos principais:</Text>
+
+          <View style={styles.presetsGrid}>
+            <TouchableOpacity 
+              style={[styles.presetItem, selectedImage === MOCK_PRESETS.alto && styles.presetItemActive]}
+              onPress={() => handleApplyPreset('alto')}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.presetDot, { backgroundColor: colors.error }]} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.presetLabel}>Cenário: Mato Alto</Text>
+                <Text style={styles.presetDetail}>Altura 120 cm • Exige Corte</Text>
+              </View>
+              {selectedImage === MOCK_PRESETS.alto && (
+                <Ionicons name="checkmark" size={18} color={colors.primary} />
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.presetItem, selectedImage === MOCK_PRESETS.conforme && styles.presetItemActive]}
+              onPress={() => handleApplyPreset('conforme')}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.presetDot, { backgroundColor: colors.success }]} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.presetLabel}>Cenário: Grama Conforme</Text>
+                <Text style={styles.presetDetail}>Altura 18 cm • Regular</Text>
+              </View>
+              {selectedImage === MOCK_PRESETS.conforme && (
+                <Ionicons name="checkmark" size={18} color={colors.primary} />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Botão de Avanço */}
-        <View style={styles.continueSection}>
-          <PrimaryButton 
-            label="Analisar Imagem com IA ➔" 
-            onPress={handleProceed} 
-          />
-        </View>
+        <TouchableOpacity 
+          style={styles.submitButton} 
+          onPress={handleProceed}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.submitButtonText}>Analisar com Inteligência Artificial</Text>
+          <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+        </TouchableOpacity>
+
       </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollPadding: { paddingBottom: 50 },
-  topBar: { marginBottom: 12 },
-  backText: { color: colors.primary, fontSize: 14, fontWeight: '700' },
-  title: { fontSize: 26, fontWeight: '800', color: colors.text, marginBottom: 4 },
-  subtitle: { color: colors.textMuted, marginBottom: 18, fontSize: 14, lineHeight: 20 },
-  viewfinder: { 
-    backgroundColor: '#0F172A', 
-    borderRadius: 20, 
-    minHeight: 220, 
+  scrollPadding: { 
+    paddingHorizontal: 20, 
+    paddingTop: 16, 
+    paddingBottom: 40 
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 14,
+    alignSelf: 'flex-start',
+  },
+  backButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textMuted,
+  },
+  header: { 
+    marginBottom: 16 
+  },
+  title: { 
+    fontSize: 26, 
+    fontWeight: '800', 
+    color: colors.text,
+    letterSpacing: -0.5 
+  },
+  subtitle: { 
+    fontSize: 14, 
+    color: colors.textMuted, 
+    marginTop: 4, 
+    lineHeight: 20 
+  },
+  summaryBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+  summaryText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  viewfinder: {
+    backgroundColor: '#0F172A',
+    borderRadius: 22,
+    height: 220,
     overflow: 'hidden',
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: colors.border
   },
-  previewBox: { width: '100%', height: 220, position: 'relative' },
-  previewImage: { width: '100%', height: '100%' },
-  previewOverlayBadge: {
+  previewContainer: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+  previewImage: {
+    width: '100%',
+    height: '100%',
+  },
+  previewBadge: {
     position: 'absolute',
     bottom: 12,
     right: 12,
-    backgroundColor: 'rgba(22, 163, 74, 0.9)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6
-  },
-  previewOverlayText: { color: '#FFFFFF', fontSize: 10, fontWeight: '800' },
-  emptyViewfinder: { padding: 24, alignItems: 'center' },
-  cameraIcon: { fontSize: 40, marginBottom: 10 },
-  cameraTitle: { fontSize: 16, fontWeight: '700', color: '#FFFFFF', marginBottom: 6 },
-  cameraText: { textAlign: 'center', color: '#94A3B8', fontSize: 13, lineHeight: 18, paddingHorizontal: 16 },
-  summaryCard: { backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: colors.border, borderRadius: 14, padding: 14, marginBottom: 20 },
-  summaryTitle: { fontSize: 11, fontWeight: '800', color: colors.primary, letterSpacing: 0.5, marginBottom: 4 },
-  summaryText: { color: colors.text, fontSize: 14, fontWeight: '600' },
-  sectionLabel: { fontSize: 11, fontWeight: '800', color: colors.textMuted, letterSpacing: 1, marginBottom: 10, marginLeft: 2 },
-  buttonGroup: { marginBottom: 8 },
-  presetsRow: { flexDirection: 'row', gap: 10, marginBottom: 24 },
-  presetBtn: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    gap: 6,
+    backgroundColor: 'rgba(15, 23, 42, 0.85)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
   },
-  presetBtnActive: {
+  previewBadgeText: {
+    color: '#34D399',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  emptyViewfinder: {
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  emptyIconCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  emptySubtitle: {
+    fontSize: 12,
+    color: '#94A3B8',
+    textAlign: 'center',
+  },
+  actionRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 14,
+    paddingVertical: 14,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.02,
+    shadowRadius: 6,
+    elevation: 1,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  demoCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  demoTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 2,
+  },
+  demoSubtitle: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginBottom: 12,
+  },
+  presetsGrid: {
+    gap: 10,
+  },
+  presetItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    borderRadius: 12,
+    padding: 12,
+  },
+  presetItemActive: {
+    backgroundColor: colors.primaryLight,
     borderColor: colors.primary,
-    backgroundColor: '#F5F3FF'
   },
-  presetEmoji: { fontSize: 18, marginBottom: 4 },
-  presetBtnText: { fontSize: 12, fontWeight: '700', color: colors.text },
-  continueSection: { marginTop: 4 }
-});
+  presetDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  presetLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  presetDetail: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  submitButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+    paddingVertical: 16,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+});
