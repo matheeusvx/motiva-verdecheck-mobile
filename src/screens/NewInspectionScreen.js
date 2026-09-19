@@ -11,13 +11,13 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
 import { useInspection } from '../contexts/InspectionContext';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 const areaOptions = [
-  { key: 'area_nobre', label: 'Área Nobre', limit: 'Máx. 30 cm', icon: 'star-outline' },
-  { key: 'faixa_comum', label: 'Faixa de Domínio', limit: 'Máx. 40 cm', icon: 'git-commit-outline' },
-  { key: 'canteiro_central', label: 'Canteiro Central', limit: 'Máx. 30 cm', icon: 'git-compare-outline' },
-  { key: 'encosta', label: 'Encosta / Talude', limit: 'Máx. 60 cm', icon: 'trending-up-outline' },
+  { key: 'area_nobre', label: 'Área Nobre', limit: 'Máx. 30 cm', icon: 'star' },
+  { key: 'faixa_comum', label: 'Faixa de Domínio', limit: 'Máx. 40 cm', icon: 'git-commit' },
+  { key: 'canteiro_central', label: 'Canteiro Central', limit: 'Máx. 30 cm', icon: 'git-compare' },
+  { key: 'encosta', label: 'Encosta / Talude', limit: 'Máx. 60 cm', icon: 'trending-up' },
 ];
 
 export default function NewInspectionScreen({ navigation }) {
@@ -53,6 +53,9 @@ export default function NewInspectionScreen({ navigation }) {
       >
         {/* Cabeçalho */}
         <View style={styles.header}>
+          <View style={styles.stepBadge}>
+            <Text style={styles.stepBadgeText}>ETAPA 1 DE 2 • DADOS DO TRECHO</Text>
+          </View>
           <Text style={styles.title}>Nova Vistoria</Text>
           <Text style={styles.subtitle}>
             Informe a localização e características da vegetação no trecho da rodovia.
@@ -62,8 +65,13 @@ export default function NewInspectionScreen({ navigation }) {
         {/* Card 1: Identificação do Trecho */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="location-outline" size={18} color={colors.primary} />
-            <Text style={styles.cardTitle}>Localização da Rodovia</Text>
+            <View style={styles.cardIconCircle}>
+              <Ionicons name="location" size={17} color={colors.primary} />
+            </View>
+            <View>
+              <Text style={styles.cardTitle}>Localização da Rodovia</Text>
+              <Text style={styles.cardSubtitle}>Identificação do ponto de vistoria</Text>
+            </View>
           </View>
 
           <View style={styles.row}>
@@ -92,7 +100,7 @@ export default function NewInspectionScreen({ navigation }) {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Sentido da Pista</Text>
+            <Text style={styles.label}>Sentido Operacional da Pista</Text>
             <TextInput
               style={styles.input}
               placeholder="Ex: Norte (Interior) ou Sul (Capital)"
@@ -106,8 +114,13 @@ export default function NewInspectionScreen({ navigation }) {
         {/* Card 2: Segmento Viário (Tipo de Área) */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="layers-outline" size={18} color={colors.primary} />
-            <Text style={styles.cardTitle}>Tipo de Segmento Viário</Text>
+            <View style={styles.cardIconCircle}>
+              <Ionicons name="layers" size={17} color={colors.primary} />
+            </View>
+            <View>
+              <Text style={styles.cardTitle}>Segmento Viário</Text>
+              <Text style={styles.cardSubtitle}>Regras normativas de altura da CCR</Text>
+            </View>
           </View>
 
           <View style={styles.areaGrid}>
@@ -121,13 +134,15 @@ export default function NewInspectionScreen({ navigation }) {
                   activeOpacity={0.8}
                 >
                   <View style={styles.areaTopRow}>
-                    <Ionicons 
-                      name={option.icon} 
-                      size={20} 
-                      color={isSelected ? colors.primary : colors.textMuted} 
-                    />
+                    <View style={[styles.areaIconMini, isSelected && styles.areaIconMiniSelected]}>
+                      <Ionicons 
+                        name={option.icon} 
+                        size={17} 
+                        color={isSelected ? colors.primary : colors.textMuted} 
+                      />
+                    </View>
                     {isSelected ? (
-                      <Ionicons name="checkmark-circle" size={18} color={colors.primary} />
+                      <Ionicons name="checkmark-circle" size={19} color={colors.primary} />
                     ) : (
                       <View style={styles.emptyCircle} />
                     )}
@@ -135,7 +150,11 @@ export default function NewInspectionScreen({ navigation }) {
                   <Text style={[styles.areaLabel, isSelected && styles.areaLabelSelected]}>
                     {option.label}
                   </Text>
-                  <Text style={styles.areaLimit}>{option.limit}</Text>
+                  <View style={[styles.limitBadge, isSelected && styles.limitBadgeSelected]}>
+                    <Text style={[styles.areaLimit, isSelected && styles.areaLimitSelected]}>
+                      {option.limit}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               );
             })}
@@ -145,12 +164,17 @@ export default function NewInspectionScreen({ navigation }) {
         {/* Card 3: Estimativa e Observações */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="speedometer-outline" size={18} color={colors.primary} />
-            <Text style={styles.cardTitle}>Altura da Vegetação</Text>
+            <View style={styles.cardIconCircle}>
+              <Ionicons name="speedometer" size={17} color={colors.primary} />
+            </View>
+            <View>
+              <Text style={styles.cardTitle}>Altura & Observações</Text>
+              <Text style={styles.cardSubtitle}>Medição visual preliminar do inspetor</Text>
+            </View>
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Altura Estimada (em centímetros)</Text>
+            <Text style={styles.label}>Altura Estimada de Campo</Text>
             <View style={styles.heightInputBox}>
               <TextInput
                 style={styles.heightInput}
@@ -170,7 +194,7 @@ export default function NewInspectionScreen({ navigation }) {
             <Text style={styles.label}>Observações de Campo (Opcional)</Text>
             <TextInput
               style={[styles.input, styles.textArea]}
-              placeholder="Ex: Trecho próximo a curva, mato encroado na mureta..."
+              placeholder="Ex: Próximo à curva, mato encroado na barreira de proteção..."
               placeholderTextColor={colors.textLight}
               value={draft.notes}
               onChangeText={text => updateDraft({ notes: text })}
@@ -183,7 +207,7 @@ export default function NewInspectionScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.submitButton} 
           onPress={handleContinue}
-          activeOpacity={0.85}
+          activeOpacity={0.88}
         >
           <Text style={styles.submitButtonText}>Avançar para Fotografia</Text>
           <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
@@ -203,6 +227,22 @@ const styles = StyleSheet.create({
   header: { 
     marginBottom: 20 
   },
+  stepBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 10,
+    paddingVertical: 4.5,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
+    marginBottom: 8,
+  },
+  stepBadgeText: {
+    fontSize: 9.5,
+    fontWeight: '800',
+    color: colors.primary,
+    letterSpacing: 0.6,
+  },
   title: { 
     fontSize: 26, 
     fontWeight: '800', 
@@ -210,34 +250,43 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5 
   },
   subtitle: { 
-    fontSize: 14, 
+    fontSize: 13.5, 
     color: colors.textMuted, 
     marginTop: 4, 
-    lineHeight: 20 
+    lineHeight: 19 
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 18,
+    borderRadius: 22,
+    padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.03,
-    shadowRadius: 10,
-    elevation: 2,
+    borderColor: colors.borderLight,
+    ...shadows.sm,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 16,
+    gap: 12,
+    marginBottom: 18,
+  },
+  cardIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardTitle: {
     fontSize: 15,
     fontWeight: '700',
     color: colors.text,
+  },
+  cardSubtitle: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 1,
   },
   row: {
     flexDirection: 'row',
@@ -248,24 +297,25 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    fontWeight: '600',
-    color: colors.textMuted,
+    fontWeight: '700',
+    color: colors.textSecondary,
     marginBottom: 6,
   },
   input: {
     backgroundColor: '#F8FAFC',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    fontSize: 15,
+    fontSize: 14.5,
     color: colors.text,
     fontWeight: '500',
   },
   textArea: {
-    minHeight: 70,
+    minHeight: 74,
     textAlignVertical: 'top',
+    paddingTop: 12,
   },
   areaGrid: {
     flexDirection: 'row',
@@ -273,11 +323,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   areaOption: {
-    width: '48%',
+    width: '48.2%',
     backgroundColor: '#F8FAFC',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    borderRadius: 14,
+    borderColor: colors.border,
+    borderRadius: 16,
     padding: 14,
   },
   areaOptionSelected: {
@@ -288,12 +338,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
+  },
+  areaIconMini: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  areaIconMiniSelected: {
+    backgroundColor: '#FFFFFF',
   },
   emptyCircle: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     borderWidth: 1.5,
     borderColor: '#CBD5E1',
   },
@@ -301,31 +362,44 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 2,
+    marginBottom: 6,
   },
   areaLabelSelected: {
-    color: colors.primary,
+    color: colors.primaryDark,
+  },
+  limitBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#E2E8F0',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  limitBadgeSelected: {
+    backgroundColor: colors.successBorder,
   },
   areaLimit: {
-    fontSize: 11,
+    fontSize: 10.5,
     color: colors.textMuted,
-    fontWeight: '500',
+    fontWeight: '700',
+  },
+  areaLimitSelected: {
+    color: colors.primaryDark,
   },
   heightInputBox: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8FAFC',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: 14,
     paddingLeft: 14,
-    paddingRight: 8,
+    paddingRight: 10,
     paddingVertical: 4,
   },
   heightInput: {
     flex: 1,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 19,
+    fontWeight: '800',
     color: colors.text,
     paddingVertical: 8,
   },
@@ -333,12 +407,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#E2E8F0',
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   unitBadgeText: {
     fontSize: 12,
     fontWeight: '800',
-    color: colors.textMuted,
+    color: colors.textSecondary,
   },
   submitButton: {
     flexDirection: 'row',
@@ -348,16 +422,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
-    marginTop: 4,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 3,
+    marginTop: 6,
+    ...shadows.primary,
   },
   submitButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 15.5,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
 });
+

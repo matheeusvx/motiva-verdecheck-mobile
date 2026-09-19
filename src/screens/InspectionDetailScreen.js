@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
 import StatusBadge from '../components/StatusBadge';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 export default function InspectionDetailScreen({ route, navigation }) {
   const { item } = route.params || {};
@@ -53,9 +53,9 @@ export default function InspectionDetailScreen({ route, navigation }) {
         <TouchableOpacity 
           style={styles.backButton} 
           onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
+          activeOpacity={0.75}
         >
-          <Ionicons name="arrow-back" size={18} color={colors.textMuted} />
+          <Ionicons name="arrow-back" size={17} color={colors.textMuted} />
           <Text style={styles.backButtonText}>Voltar ao Histórico</Text>
         </TouchableOpacity>
 
@@ -74,7 +74,8 @@ export default function InspectionDetailScreen({ route, navigation }) {
             </View>
           )}
           <View style={styles.imageBadge}>
-            <Text style={styles.imageBadgeText}>EVIDÊNCIA EM CAMPO</Text>
+            <Ionicons name="shield-checkmark" size={13} color="#FFFFFF" />
+            <Text style={styles.imageBadgeText}>EVIDÊNCIA AUDITADA</Text>
           </View>
         </View>
 
@@ -90,29 +91,36 @@ export default function InspectionDetailScreen({ route, navigation }) {
         {/* Card: Diagnóstico da IA */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="analytics-outline" size={18} color={colors.primary} />
+            <View style={styles.cardIconCircle}>
+              <Ionicons name="analytics" size={17} color={colors.primary} />
+            </View>
             <Text style={styles.cardTitle}>Diagnóstico Computacional</Text>
           </View>
           
           <Text style={styles.justificationText}>
-            {item.justification || 'Análise de conformidade operacional realizada com base nas normas CCR.'}
+            {item.justification || 'Análise de conformidade operacional realizada com base nas normas da concessionária CCR.'}
           </Text>
 
           <View style={styles.confidenceRow}>
-            <Text style={styles.confidenceLabel}>Confiança da Inferência</Text>
-            <Text style={styles.confidenceValue}>{confidencePercent}%</Text>
+            <Text style={styles.confidenceLabel}>Confiança da Classificação</Text>
+            <View style={styles.confidencePill}>
+              <Ionicons name="sparkles" size={12} color={colors.primary} />
+              <Text style={styles.confidenceValue}>{confidencePercent}%</Text>
+            </View>
           </View>
         </View>
 
         {/* Card: Dados Técnicos */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="list-outline" size={18} color={colors.primary} />
+            <View style={styles.cardIconCircle}>
+              <Ionicons name="list" size={17} color={colors.primary} />
+            </View>
             <Text style={styles.cardTitle}>Parâmetros do Trecho</Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Sentido da Via</Text>
+            <Text style={styles.detailLabel}>Sentido Operacional</Text>
             <Text style={styles.detailValue}>{item.direction || '-'}</Text>
           </View>
 
@@ -123,7 +131,7 @@ export default function InspectionDetailScreen({ route, navigation }) {
 
           <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
             <Text style={styles.detailLabel}>Altura Registrada</Text>
-            <Text style={[styles.detailValue, { fontWeight: '800' }]}>
+            <Text style={[styles.detailValue, { fontWeight: '800', color: colors.primaryDark }]}>
               {item.estimatedHeight ? `${item.estimatedHeight} cm` : '-'}
             </Text>
           </View>
@@ -133,7 +141,9 @@ export default function InspectionDetailScreen({ route, navigation }) {
         {item.notes ? (
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <Ionicons name="document-text-outline" size={18} color={colors.primary} />
+              <View style={styles.cardIconCircle}>
+                <Ionicons name="document-text" size={17} color={colors.primary} />
+              </View>
               <Text style={styles.cardTitle}>Observações do Inspetor</Text>
             </View>
             <Text style={styles.notesText}>{item.notes}</Text>
@@ -144,9 +154,9 @@ export default function InspectionDetailScreen({ route, navigation }) {
         <TouchableOpacity 
           style={styles.shareButton} 
           onPress={handleShare}
-          activeOpacity={0.85}
+          activeOpacity={0.88}
         >
-          <Ionicons name="share-social-outline" size={18} color={colors.primary} />
+          <Ionicons name="share-social-outline" size={18} color="#FFFFFF" />
           <Text style={styles.shareButtonText}>Compartilhar Laudo com CCR</Text>
         </TouchableOpacity>
 
@@ -175,14 +185,13 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 200,
-    borderRadius: 20,
+    height: 210,
+    borderRadius: 22,
     overflow: 'hidden',
     backgroundColor: '#0F172A',
-    marginBottom: 16,
+    marginBottom: 18,
     position: 'relative',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+    ...shadows.md,
   },
   image: {
     width: '100%',
@@ -195,59 +204,71 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F5F9',
   },
   imagePlaceholderText: {
-    color: colors.textMuted,
     fontSize: 13,
+    color: colors.textLight,
     marginTop: 8,
+    fontWeight: '500',
   },
   imageBadge: {
     position: 'absolute',
-    bottom: 10,
-    left: 10,
-    backgroundColor: 'rgba(15, 23, 42, 0.8)',
+    bottom: 12,
+    left: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: 'rgba(15, 23, 42, 0.82)',
     paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingVertical: 5,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
   imageBadgeText: {
     color: '#FFFFFF',
-    fontSize: 9,
+    fontSize: 9.5,
     fontWeight: '800',
-    letterSpacing: 0.8,
+    letterSpacing: 0.6,
   },
   headerBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 18,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    color: colors.textMuted,
     fontSize: 13,
+    color: colors.textMuted,
     marginTop: 2,
+    fontWeight: '500',
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 14,
+    borderRadius: 22,
+    padding: 20,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.02,
-    shadowRadius: 8,
-    elevation: 1,
+    borderColor: colors.borderLight,
+    ...shadows.sm,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    gap: 10,
+    marginBottom: 14,
+  },
+  cardIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardTitle: {
     fontSize: 15,
@@ -256,67 +277,77 @@ const styles = StyleSheet.create({
   },
   justificationText: {
     fontSize: 14,
-    color: colors.text,
-    lineHeight: 22,
-    fontWeight: '500',
-    marginBottom: 12,
+    color: colors.textSecondary,
+    lineHeight: 20,
+    marginBottom: 14,
   },
   confidenceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: colors.borderLight,
   },
   confidenceLabel: {
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.textMuted,
     fontWeight: '600',
   },
+  confidencePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
   confidenceValue: {
-    fontSize: 13,
-    color: colors.primary,
+    fontSize: 12.5,
     fontWeight: '800',
+    color: colors.primaryDark,
   },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 11,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: colors.borderLight,
   },
   detailLabel: {
     fontSize: 13,
     color: colors.textMuted,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   detailValue: {
-    fontSize: 13,
+    fontSize: 13.5,
     fontWeight: '700',
     color: colors.text,
   },
   notesText: {
-    fontSize: 13,
-    color: colors.textMuted,
-    lineHeight: 20,
+    fontSize: 13.5,
+    color: colors.textSecondary,
+    lineHeight: 19,
+    fontStyle: 'italic',
   },
   shareButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
+    backgroundColor: colors.primary,
     borderRadius: 16,
-    paddingVertical: 15,
+    paddingVertical: 16,
     marginTop: 6,
+    ...shadows.primary,
   },
   shareButtonText: {
-    color: colors.primary,
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
 });
+

@@ -1,23 +1,49 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { colors } from '../utils/theme';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { colors, shadows } from '../utils/theme';
 
-export default function PrimaryButton({ label, onPress, variant = 'primary', style }) {
+export default function PrimaryButton({ 
+  label, 
+  onPress, 
+  variant = 'primary', 
+  icon = null, 
+  style, 
+  textStyle,
+  disabled = false 
+}) {
   const isPrimary = variant === 'primary';
+  const isOutline = variant === 'outline';
+  const isSubtle = variant === 'subtle';
 
   return (
     <TouchableOpacity 
       style={[
         styles.button, 
-        isPrimary ? styles.primary : styles.secondary,
+        isPrimary && styles.primary,
+        variant === 'secondary' && styles.secondary,
+        isOutline && styles.outline,
+        isSubtle && styles.subtle,
+        disabled && styles.disabled,
         style
       ]} 
       onPress={onPress}
+      disabled={disabled}
       activeOpacity={0.82}
     >
-      <Text style={[styles.text, isPrimary ? styles.textPrimary : styles.textSecondary]}>
-        {label}
-      </Text>
+      <View style={styles.contentRow}>
+        {icon && <View style={styles.iconWrapper}>{icon}</View>}
+        <Text style={[
+          styles.text, 
+          isPrimary && styles.textPrimary,
+          variant === 'secondary' && styles.textSecondary,
+          isOutline && styles.textOutline,
+          isSubtle && styles.textSubtle,
+          disabled && styles.textDisabled,
+          textStyle
+        ]}>
+          {label}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -25,33 +51,50 @@ export default function PrimaryButton({ label, onPress, variant = 'primary', sty
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 15,
-    borderRadius: 14,
+    paddingHorizontal: 20,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
+  contentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  iconWrapper: {
+    marginRight: 2,
+  },
   primary: {
     backgroundColor: colors.primary,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 10,
-    elevation: 3,
+    ...shadows.primary,
   },
   secondary: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1.5,
     borderColor: colors.border,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.03,
-    shadowRadius: 6,
-    elevation: 1,
+    ...shadows.sm,
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+  },
+  subtle: {
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
+  },
+  disabled: {
+    backgroundColor: '#E2E8F0',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   text: {
     fontSize: 15,
     fontWeight: '700',
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
   },
   textPrimary: { 
     color: '#FFFFFF',
@@ -59,5 +102,15 @@ const styles = StyleSheet.create({
   textSecondary: { 
     color: colors.text,
   },
+  textOutline: {
+    color: colors.primary,
+  },
+  textSubtle: {
+    color: colors.primary,
+  },
+  textDisabled: {
+    color: colors.textLight,
+  }
 });
+
 

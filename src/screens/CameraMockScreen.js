@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import ScreenContainer from '../components/ScreenContainer';
 import { useInspection } from '../contexts/InspectionContext';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 export default function CameraMockScreen({ navigation }) {
   const { draft, updateDraft } = useInspection();
@@ -88,45 +88,56 @@ export default function CameraMockScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.backButton} 
           onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
+          activeOpacity={0.75}
         >
-          <Ionicons name="arrow-back" size={18} color={colors.textMuted} />
+          <Ionicons name="arrow-back" size={17} color={colors.textMuted} />
           <Text style={styles.backButtonText}>Alterar Dados do Trecho</Text>
         </TouchableOpacity>
 
         {/* Cabeçalho */}
         <View style={styles.header}>
-          <Text style={styles.title}>Evidência Fotográfica</Text>
+          <View style={styles.stepBadge}>
+            <Text style={styles.stepBadgeText}>ETAPA 2 DE 2 • REGISTRO FOTOGRÁFICO</Text>
+          </View>
+          <Text style={styles.title}>Evidência em Campo</Text>
           <Text style={styles.subtitle}>
-            Capture a foto da vegetação ou escolha uma imagem para a inteligência artificial analisar.
+            Capture a foto da vegetação para a inteligência artificial realizar o diagnóstico.
           </Text>
         </View>
 
         {/* Resumo do Trecho */}
         <View style={styles.summaryBar}>
-          <Ionicons name="navigate-circle-outline" size={18} color={colors.primary} />
+          <View style={styles.summaryIconCircle}>
+            <Ionicons name="navigate" size={15} color={colors.primary} />
+          </View>
           <Text style={styles.summaryText}>
             {draft.road || 'SP-310'} • KM {draft.km || '142'} • {draft.direction || 'Sentido Norte'}
           </Text>
         </View>
 
-        {/* Visor de Visualização */}
+        {/* Visor de Visualização / Scanner */}
         <View style={styles.viewfinder}>
           {selectedImage ? (
             <View style={styles.previewContainer}>
               <Image source={{ uri: selectedImage }} style={styles.previewImage} resizeMode="cover" />
+              <View style={styles.scanOverlay}>
+                <View style={[styles.cornerBox, styles.cornerTL]} />
+                <View style={[styles.cornerBox, styles.cornerTR]} />
+                <View style={[styles.cornerBox, styles.cornerBL]} />
+                <View style={[styles.cornerBox, styles.cornerBR]} />
+              </View>
               <View style={styles.previewBadge}>
                 <Ionicons name="checkmark-circle" size={14} color="#34D399" />
-                <Text style={styles.previewBadgeText}>IMAGEM PRONTA</Text>
+                <Text style={styles.previewBadgeText}>EVIDÊNCIA CARREGADA</Text>
               </View>
             </View>
           ) : (
             <View style={styles.emptyViewfinder}>
               <View style={styles.emptyIconCircle}>
-                <Ionicons name="camera-outline" size={32} color="#FFFFFF" />
+                <Ionicons name="camera" size={30} color="#FFFFFF" />
               </View>
               <Text style={styles.emptyTitle}>Nenhuma foto selecionada</Text>
-              <Text style={styles.emptySubtitle}>Tire uma foto ou escolha um dos cenários abaixo</Text>
+              <Text style={styles.emptySubtitle}>Tire uma foto ou escolha um cenário abaixo</Text>
             </View>
           )}
         </View>
@@ -136,47 +147,54 @@ export default function CameraMockScreen({ navigation }) {
           <TouchableOpacity 
             style={styles.actionButton} 
             onPress={handleTakePhoto} 
-            activeOpacity={0.8}
+            activeOpacity={0.82}
           >
-            <Ionicons name="camera" size={20} color={colors.primary} />
+            <View style={styles.actionIconCircle}>
+              <Ionicons name="camera" size={20} color={colors.primary} />
+            </View>
             <Text style={styles.actionButtonText}>Abrir Câmera</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.actionButton} 
             onPress={handlePickFromGallery} 
-            activeOpacity={0.8}
+            activeOpacity={0.82}
           >
-            <Ionicons name="images" size={20} color={colors.primary} />
+            <View style={styles.actionIconCircle}>
+              <Ionicons name="images" size={20} color={colors.primary} />
+            </View>
             <Text style={styles.actionButtonText}>Abrir Galeria</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Cenários de Demonstração / Banca */}
+        {/* Cenários Rápidos de Demonstração / Banca */}
         <View style={styles.demoCard}>
-          <Text style={styles.demoTitle}>Cenários Rápidos de Demonstração</Text>
-          <Text style={styles.demoSubtitle}>Toque para testar os dois fluxos principais:</Text>
+          <View style={styles.demoHeaderRow}>
+            <Ionicons name="flask-outline" size={17} color={colors.secondary} />
+            <Text style={styles.demoTitle}>Cenários Rápidos de Demonstração</Text>
+          </View>
+          <Text style={styles.demoSubtitle}>Toque para testar os dois fluxos principais da banca:</Text>
 
           <View style={styles.presetsGrid}>
             <TouchableOpacity 
               style={[styles.presetItem, selectedImage === MOCK_PRESETS.alto && styles.presetItemActive]}
               onPress={() => handleApplyPreset('alto')}
-              activeOpacity={0.8}
+              activeOpacity={0.82}
             >
               <View style={[styles.presetDot, { backgroundColor: colors.error }]} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.presetLabel}>Cenário: Mato Alto</Text>
-                <Text style={styles.presetDetail}>Altura 120 cm • Exige Corte</Text>
+                <Text style={styles.presetDetail}>Altura 120 cm • Exige Roçada</Text>
               </View>
               {selectedImage === MOCK_PRESETS.alto && (
-                <Ionicons name="checkmark" size={18} color={colors.primary} />
+                <Ionicons name="checkmark-circle" size={20} color={colors.primary} />
               )}
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[styles.presetItem, selectedImage === MOCK_PRESETS.conforme && styles.presetItemActive]}
               onPress={() => handleApplyPreset('conforme')}
-              activeOpacity={0.8}
+              activeOpacity={0.82}
             >
               <View style={[styles.presetDot, { backgroundColor: colors.success }]} />
               <View style={{ flex: 1 }}>
@@ -184,7 +202,7 @@ export default function CameraMockScreen({ navigation }) {
                 <Text style={styles.presetDetail}>Altura 18 cm • Regular</Text>
               </View>
               {selectedImage === MOCK_PRESETS.conforme && (
-                <Ionicons name="checkmark" size={18} color={colors.primary} />
+                <Ionicons name="checkmark-circle" size={20} color={colors.primary} />
               )}
             </TouchableOpacity>
           </View>
@@ -194,7 +212,7 @@ export default function CameraMockScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.submitButton} 
           onPress={handleProceed}
-          activeOpacity={0.85}
+          activeOpacity={0.88}
         >
           <Text style={styles.submitButtonText}>Analisar com Inteligência Artificial</Text>
           <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
@@ -215,7 +233,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 14,
+    marginBottom: 12,
     alignSelf: 'flex-start',
   },
   backButtonText: {
@@ -226,6 +244,22 @@ const styles = StyleSheet.create({
   header: { 
     marginBottom: 16 
   },
+  stepBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 10,
+    paddingVertical: 4.5,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
+    marginBottom: 8,
+  },
+  stepBadgeText: {
+    fontSize: 9.5,
+    fontWeight: '800',
+    color: colors.primary,
+    letterSpacing: 0.6,
+  },
   title: { 
     fontSize: 26, 
     fontWeight: '800', 
@@ -233,22 +267,31 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5 
   },
   subtitle: { 
-    fontSize: 14, 
+    fontSize: 13.5, 
     color: colors.textMuted, 
     marginTop: 4, 
-    lineHeight: 20 
+    lineHeight: 19 
   },
   summaryBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 10,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
+    borderColor: colors.borderLight,
+    borderRadius: 14,
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingVertical: 11,
     marginBottom: 16,
+    ...shadows.sm,
+  },
+  summaryIconCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   summaryText: {
     fontSize: 13,
@@ -263,6 +306,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    ...shadows.md,
   },
   previewContainer: {
     width: '100%',
@@ -273,6 +317,40 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  scanOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    padding: 20,
+  },
+  cornerBox: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    borderColor: '#34D399',
+  },
+  cornerTL: {
+    top: 16,
+    left: 16,
+    borderTopWidth: 2.5,
+    borderLeftWidth: 2.5,
+  },
+  cornerTR: {
+    top: 16,
+    right: 16,
+    borderTopWidth: 2.5,
+    borderRightWidth: 2.5,
+  },
+  cornerBL: {
+    bottom: 16,
+    left: 16,
+    borderBottomWidth: 2.5,
+    borderLeftWidth: 2.5,
+  },
+  cornerBR: {
+    bottom: 16,
+    right: 16,
+    borderBottomWidth: 2.5,
+    borderRightWidth: 2.5,
+  },
   previewBadge: {
     position: 'absolute',
     bottom: 12,
@@ -280,39 +358,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-    paddingHorizontal: 10,
+    backgroundColor: 'rgba(15, 23, 42, 0.88)',
+    paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
   previewBadgeText: {
     color: '#34D399',
     fontSize: 10,
     fontWeight: '800',
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
   },
   emptyViewfinder: {
     alignItems: 'center',
     paddingHorizontal: 20,
   },
   emptyIconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   emptyTitle: {
-    fontSize: 16,
-    fontWeight: '700',
     color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
     marginBottom: 4,
   },
   emptySubtitle: {
-    fontSize: 12,
     color: '#94A3B8',
+    fontSize: 12.5,
     textAlign: 'center',
   },
   actionRow: {
@@ -325,41 +405,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 10,
     backgroundColor: '#FFFFFF',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    borderRadius: 14,
+    borderColor: colors.border,
+    borderRadius: 16,
     paddingVertical: 14,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.02,
-    shadowRadius: 6,
-    elevation: 1,
+    ...shadows.sm,
+  },
+  actionIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   actionButtonText: {
+    color: colors.text,
+    fontSize: 13.5,
+    fontWeight: '700',
+  },
+  demoCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    marginBottom: 16,
+    ...shadows.sm,
+  },
+  demoHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  demoTitle: {
     fontSize: 14,
     fontWeight: '700',
     color: colors.text,
   },
-  demoCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  demoTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: colors.text,
-    marginBottom: 2,
-  },
   demoSubtitle: {
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.textMuted,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   presetsGrid: {
     gap: 10,
@@ -367,12 +457,12 @@ const styles = StyleSheet.create({
   presetItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
     backgroundColor: '#F8FAFC',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: 14,
     padding: 12,
+    gap: 12,
   },
   presetItemActive: {
     backgroundColor: colors.primaryLight,
@@ -384,12 +474,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   presetLabel: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: colors.text,
   },
   presetDetail: {
-    fontSize: 12,
+    fontSize: 11.5,
     color: colors.textMuted,
     marginTop: 2,
   },
@@ -401,15 +491,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 3,
+    ...shadows.primary,
   },
   submitButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 15.5,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
-});
+});

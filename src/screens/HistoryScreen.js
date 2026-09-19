@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
 import StatusBadge from '../components/StatusBadge';
 import { useInspection } from '../contexts/InspectionContext';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 export default function HistoryScreen({ navigation }) {
   const { history, clearHistory, resetDefaultHistory } = useInspection();
@@ -56,7 +56,7 @@ export default function HistoryScreen({ navigation }) {
             <TouchableOpacity 
               onPress={handleClearHistory} 
               style={styles.clearBtn} 
-              activeOpacity={0.7}
+              activeOpacity={0.75}
             >
               <Ionicons name="trash-outline" size={14} color={colors.error} />
               <Text style={styles.clearBtnText}>Limpar</Text>
@@ -65,7 +65,7 @@ export default function HistoryScreen({ navigation }) {
             <TouchableOpacity 
               onPress={handleResetMocks} 
               style={styles.restoreBtn} 
-              activeOpacity={0.7}
+              activeOpacity={0.75}
             >
               <Ionicons name="refresh-outline" size={14} color={colors.primary} />
               <Text style={styles.restoreBtnText}>Restaurar</Text>
@@ -79,7 +79,7 @@ export default function HistoryScreen({ navigation }) {
             <TouchableOpacity 
               style={[styles.filterPill, filter === 'todos' && styles.filterPillActive]} 
               onPress={() => setFilter('todos')}
-              activeOpacity={0.8}
+              activeOpacity={0.82}
             >
               <Text style={[styles.filterText, filter === 'todos' && styles.filterTextActive]}>
                 Todas ({history.length})
@@ -89,7 +89,7 @@ export default function HistoryScreen({ navigation }) {
             <TouchableOpacity 
               style={[styles.filterPill, filter === 'cortar' && styles.filterPillActive]} 
               onPress={() => setFilter('cortar')}
-              activeOpacity={0.8}
+              activeOpacity={0.82}
             >
               <Text style={[styles.filterText, filter === 'cortar' && styles.filterTextActive]}>
                 Requer Corte
@@ -99,7 +99,7 @@ export default function HistoryScreen({ navigation }) {
             <TouchableOpacity 
               style={[styles.filterPill, filter === 'conforme' && styles.filterPillActive]} 
               onPress={() => setFilter('conforme')}
-              activeOpacity={0.8}
+              activeOpacity={0.82}
             >
               <Text style={[styles.filterText, filter === 'conforme' && styles.filterTextActive]}>
                 Conformes
@@ -116,12 +116,12 @@ export default function HistoryScreen({ navigation }) {
             </View>
             <Text style={styles.emptyTitle}>Nenhuma vistoria encontrada</Text>
             <Text style={styles.emptyMessage}>
-              Você ainda não realizou vistorias ou limpou os dados locais. Restaure os exemplos para testar.
+              Você ainda não realizou vistorias ou limpou os dados locais. Restaure os exemplos para testar o fluxo.
             </Text>
             <TouchableOpacity 
               style={styles.emptyActionButton} 
               onPress={handleResetMocks}
-              activeOpacity={0.85}
+              activeOpacity={0.88}
             >
               <Ionicons name="refresh-outline" size={16} color="#FFFFFF" />
               <Text style={styles.emptyActionButtonText}>Restaurar Exemplos da Banca</Text>
@@ -134,7 +134,7 @@ export default function HistoryScreen({ navigation }) {
           <TouchableOpacity 
             key={item.id} 
             style={styles.card}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={() => navigation.navigate('InspectionDetail', { item })}
           >
             <View style={styles.cardTop}>
@@ -148,7 +148,14 @@ export default function HistoryScreen({ navigation }) {
             <View style={styles.statsRow}>
               <View style={styles.statBox}>
                 <Text style={styles.statLabel}>ALTURA</Text>
-                <Text style={styles.statValue}>{item.estimatedHeight} cm</Text>
+                <Text style={[
+                  styles.statValue, 
+                  item.status === 'Cortar' || item.severity === 'Crítico' 
+                    ? { color: colors.error, fontWeight: '800' } 
+                    : { color: colors.success, fontWeight: '800' }
+                ]}>
+                  {item.estimatedHeight} cm
+                </Text>
               </View>
               <View style={styles.statBox}>
                 <Text style={styles.statLabel}>SENTIDO</Text>
@@ -210,7 +217,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEE2E2',
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#FECACA',
   },
   clearBtnText: {
     color: '#DC2626',
@@ -224,7 +233,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
   },
   restoreBtnText: {
     color: colors.primary,
@@ -239,14 +250,16 @@ const styles = StyleSheet.create({
   filterPill: {
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 10,
+    borderRadius: 14,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   filterPillActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
+    ...shadows.primary,
   },
   filterText: {
     fontSize: 12,
@@ -258,26 +271,29 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 22,
+    borderRadius: 24,
     padding: 32,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.borderLight,
     marginTop: 20,
+    ...shadows.sm,
   },
   emptyIconCircle: {
     width: 64,
     height: 64,
     borderRadius: 32,
     backgroundColor: colors.primaryLight,
+    borderWidth: 1.5,
+    borderColor: colors.successBorder,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
   },
   emptyTitle: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.text,
     marginBottom: 6,
     textAlign: 'center',
@@ -286,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textMuted,
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 19,
     marginBottom: 20,
     paddingHorizontal: 10,
   },
@@ -295,38 +311,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     backgroundColor: colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    borderRadius: 12,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    ...shadows.primary,
   },
   emptyActionButtonText: {
     color: '#FFFFFF',
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: 13.5,
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: 22,
+    padding: 18,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.03,
-    shadowRadius: 8,
-    elevation: 1,
+    borderColor: colors.borderLight,
+    ...shadows.sm,
   },
   cardTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   roadTitle: {
-    fontSize: 16,
+    fontSize: 16.5,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.2,
   },
   dateSubtitle: {
     fontSize: 12,
@@ -336,20 +350,22 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   statBox: {
     flex: 1,
     backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: colors.borderLight,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   statLabel: {
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.textMuted,
     marginBottom: 2,
-    letterSpacing: 0.4,
+    letterSpacing: 0.5,
   },
   statValue: {
     fontSize: 13,
@@ -357,25 +373,26 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   notesText: {
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.textMuted,
     fontStyle: 'italic',
-    marginBottom: 10,
-    paddingTop: 8,
+    marginBottom: 12,
+    paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: colors.borderLight,
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: 11,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: colors.borderLight,
   },
   footerLink: {
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.primary,
     fontWeight: '700',
   },
 });
+

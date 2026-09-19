@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useInspection } from '../contexts/InspectionContext';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 export default function HomeScreen({ navigation }) {
   const { history, user, logoutUser } = useInspection();
@@ -30,55 +30,77 @@ export default function HomeScreen({ navigation }) {
         {/* Cabeçalho do Inspetor */}
         <View style={styles.header}>
           <View>
+            <View style={styles.statusOnlineRow}>
+              <View style={styles.onlineDot} />
+              <Text style={styles.onlineText}>OPERACIONAL • CONECTADO</Text>
+            </View>
             <Text style={styles.greeting}>Olá, {user?.name || 'Inspetor'}</Text>
-            <Text style={styles.userRole}>Inspetor Operacional • CCR Motiva</Text>
+            <Text style={styles.userRole}>Supervisão CCR Motiva</Text>
           </View>
+
           <View style={styles.avatar}>
             <Text style={styles.avatarLetter}>{(user?.name || 'I').charAt(0).toUpperCase()}</Text>
           </View>
         </View>
 
-        {/* Resumo Rápido das Vistorias */}
+        {/* Resumo Rápido das Vistorias - Dashboard Micro-tiles */}
         <View style={styles.summaryCard}>
           <View style={styles.summaryItem}>
+            <View style={[styles.summaryIconDot, { backgroundColor: colors.surfaceSubtle }]}>
+              <Ionicons name="folder-outline" size={15} color={colors.textSecondary} />
+            </View>
             <Text style={styles.summaryNumber}>{totalCount}</Text>
             <Text style={styles.summaryLabel}>Total salvas</Text>
           </View>
+
           <View style={styles.summaryDivider} />
+
           <View style={styles.summaryItem}>
+            <View style={[styles.summaryIconDot, { backgroundColor: colors.errorBg }]}>
+              <Ionicons name="alert-circle-outline" size={15} color={colors.error} />
+            </View>
             <Text style={[styles.summaryNumber, { color: colors.error }]}>{criticalCount}</Text>
-            <Text style={styles.summaryLabel}>Para roçada</Text>
+            <Text style={styles.summaryLabel}>Requer corte</Text>
           </View>
+
           <View style={styles.summaryDivider} />
+
           <View style={styles.summaryItem}>
+            <View style={[styles.summaryIconDot, { backgroundColor: colors.successBg }]}>
+              <Ionicons name="checkmark-circle-outline" size={15} color={colors.success} />
+            </View>
             <Text style={[styles.summaryNumber, { color: colors.success }]}>{okCount}</Text>
             <Text style={styles.summaryLabel}>Conformes</Text>
           </View>
         </View>
 
-        {/* Ação Principal: Nova Vistoria */}
+        {/* Seção de Ação Principal */}
+        <Text style={styles.sectionHeader}>AÇÕES RÁPIDAS DE CAMPO</Text>
+
+        {/* Hero Card: Nova Vistoria com IA */}
         <TouchableOpacity 
           style={styles.heroActionCard}
           onPress={() => navigation.navigate('Nova Análise')}
           activeOpacity={0.9}
         >
-          <View style={styles.heroActionHeader}>
+          <View style={styles.heroActionTop}>
             <View style={styles.heroIconCircle}>
-              <Ionicons name="camera" size={26} color="#FFFFFF" />
+              <Ionicons name="scan" size={24} color="#FFFFFF" />
             </View>
             <View style={styles.heroBadge}>
-              <Text style={styles.heroBadgeText}>INTELIGÊNCIA ARTIFICIAL</Text>
+              <View style={styles.heroBadgeDot} />
+              <Text style={styles.heroBadgeText}>IA COMPUTACIONAL</Text>
             </View>
           </View>
 
           <Text style={styles.heroTitle}>Nova Vistoria de Campo</Text>
           <Text style={styles.heroSubtitle}>
-            Fotografe a grama da faixa de domínio e receba a recomendação instantânea de corte.
+            Fotografe a grama na faixa de domínio e receba o diagnóstico instantâneo de roçada.
           </Text>
 
           <View style={styles.heroButton}>
             <Text style={styles.heroButtonText}>Iniciar Vistoria Agora</Text>
-            <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+            <Ionicons name="arrow-forward" size={17} color="#FFFFFF" />
           </View>
         </TouchableOpacity>
 
@@ -93,21 +115,34 @@ export default function HomeScreen({ navigation }) {
               <Ionicons name="document-text-outline" size={22} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.secondaryTitle}>Consultar Histórico</Text>
-              <Text style={styles.secondarySubtitle}>Acesse fotos, relatórios e laudos anteriores</Text>
+              <Text style={styles.secondaryTitle}>Histórico de Vistorias</Text>
+              <Text style={styles.secondarySubtitle}>Consulte laudos, imagens e dados salvos</Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color={colors.textLight} />
+            <View style={styles.chevronCircle}>
+              <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
+            </View>
           </View>
         </TouchableOpacity>
+
+        {/* Card Informativo de Conformidade CCR */}
+        <View style={styles.infoCard}>
+          <Ionicons name="information-circle-outline" size={20} color={colors.secondary} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.infoCardTitle}>Padrão Normativo CCR</Text>
+            <Text style={styles.infoCardText}>
+              Áreas nobres: máx 30cm • Faixa comum: máx 40cm • Encostas: máx 60cm.
+            </Text>
+          </View>
+        </View>
 
         {/* Botão de Logout Discreto */}
         <TouchableOpacity 
           style={styles.logoutButton} 
           onPress={handleLogout} 
-          activeOpacity={0.7}
+          activeOpacity={0.75}
         >
-          <Ionicons name="log-out-outline" size={18} color={colors.textMuted} />
-          <Text style={styles.logoutText}>Encerrar Sessão</Text>
+          <Ionicons name="log-out-outline" size={17} color={colors.textMuted} />
+          <Text style={styles.logoutText}>Encerrar Sessão do Inspetor</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -118,78 +153,99 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.background,
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 36,
+    paddingTop: 28,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 22,
+  },
+  statusOnlineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 4,
+  },
+  onlineDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.primary,
+  },
+  onlineText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: colors.primary,
+    letterSpacing: 0.8,
   },
   greeting: {
     fontSize: 26,
     fontWeight: '800',
     color: colors.text,
-    letterSpacing: -0.5,
+    letterSpacing: -0.6,
   },
   userRole: {
     fontSize: 13,
     color: colors.textMuted,
-    marginTop: 2,
+    marginTop: 1,
     fontWeight: '500',
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.primary,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 2,
+    borderColor: colors.successBorder,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 3,
+    ...shadows.sm,
   },
   avatarLetter: {
-    color: '#FFFFFF',
-    fontSize: 17,
+    color: colors.primaryDark,
+    fontSize: 18,
     fontWeight: '800',
   },
   summaryCard: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    paddingVertical: 16,
-    paddingHorizontal: 8,
-    marginBottom: 20,
+    borderRadius: 20,
+    paddingVertical: 18,
+    paddingHorizontal: 12,
+    marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.03,
-    shadowRadius: 10,
-    elevation: 2,
+    borderColor: colors.borderLight,
+    ...shadows.sm,
   },
   summaryItem: {
     flex: 1,
     alignItems: 'center',
   },
+  summaryIconDot: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+  },
   summaryDivider: {
     width: 1,
-    height: '70%',
-    backgroundColor: '#E2E8F0',
+    height: '65%',
+    backgroundColor: colors.borderLight,
     alignSelf: 'center',
   },
   summaryNumber: {
     fontSize: 22,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.5,
   },
   summaryLabel: {
     fontSize: 11,
@@ -197,41 +253,57 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 2,
   },
+  sectionHeader: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: colors.textLight,
+    letterSpacing: 0.8,
+    marginBottom: 12,
+    marginLeft: 2,
+  },
   heroActionCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 22,
+    borderRadius: 24,
     padding: 22,
-    marginBottom: 16,
+    marginBottom: 14,
     borderWidth: 1.5,
-    borderColor: '#A7F3D0',
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 3,
+    borderColor: colors.successBorder,
+    ...shadows.md,
   },
-  heroActionHeader: {
+  heroActionTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
   },
   heroIconCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 48,
+    height: 48,
+    borderRadius: 16,
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadows.primary,
   },
   heroBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.primaryLight,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
+    gap: 5,
+  },
+  heroBadgeDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.primary,
   },
   heroBadgeText: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontWeight: '800',
     color: colors.primary,
     letterSpacing: 0.6,
@@ -240,13 +312,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.4,
     marginBottom: 6,
   },
   heroSubtitle: {
-    fontSize: 14,
+    fontSize: 13.5,
     color: colors.textMuted,
-    lineHeight: 20,
-    marginBottom: 20,
+    lineHeight: 19,
+    marginBottom: 18,
   },
   heroButton: {
     flexDirection: 'row',
@@ -255,25 +328,23 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: colors.primary,
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: 16,
+    ...shadows.primary,
   },
   heroButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
   secondaryCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: 20,
     padding: 18,
-    marginBottom: 20,
+    marginBottom: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.02,
-    shadowRadius: 8,
-    elevation: 1,
+    borderColor: colors.borderLight,
+    ...shadows.sm,
   },
   secondaryHeader: {
     flexDirection: 'row',
@@ -283,20 +354,50 @@ const styles = StyleSheet.create({
   secondaryIconCircle: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: 14,
     backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
   secondaryTitle: {
-    fontSize: 16,
+    fontSize: 15.5,
     fontWeight: '700',
     color: colors.text,
   },
   secondarySubtitle: {
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.textMuted,
     marginTop: 2,
+  },
+  chevronCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.surfaceSubtle,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  infoCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    backgroundColor: colors.secondaryLight,
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+  },
+  infoCardTitle: {
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: colors.secondary,
+    marginBottom: 2,
+  },
+  infoCardText: {
+    fontSize: 12,
+    color: '#0369A1',
+    lineHeight: 17,
   },
   logoutButton: {
     flexDirection: 'row',
@@ -304,10 +405,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: 16,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.border,
   },
   logoutText: {
     color: colors.textMuted,
@@ -315,6 +416,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
+
 
 
 

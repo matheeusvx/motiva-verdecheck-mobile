@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ScreenContainer from '../components/ScreenContainer';
 import { useInspection } from '../contexts/InspectionContext';
 import { evaluateInspection } from '../utils/mockAnalysis';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 export default function ResultScreen({ navigation }) {
   const { draft, saveInspection, resetDraft } = useInspection();
@@ -51,9 +51,13 @@ export default function ResultScreen({ navigation }) {
       >
         {/* Cabeçalho */}
         <View style={styles.header}>
+          <View style={styles.badgeSuccess}>
+            <Ionicons name="shield-checkmark" size={14} color={colors.primary} />
+            <Text style={styles.badgeSuccessText}>INSPEÇÃO CONCLUÍDA</Text>
+          </View>
           <Text style={styles.title}>Diagnóstico da IA</Text>
           <Text style={styles.subtitle}>
-            Resultado da inferência visual e verificação dos parâmetros da CCR.
+            Resultado da inferência visual e verificação dos parâmetros técnicos da CCR.
           </Text>
         </View>
 
@@ -67,6 +71,7 @@ export default function ResultScreen({ navigation }) {
               styles.verdictBadge,
               isCut ? styles.verdictBadgeCut : styles.verdictBadgeOk
             ]}>
+              <View style={[styles.verdictDot, { backgroundColor: isCut ? colors.error : colors.success }]} />
               <Text style={[
                 styles.verdictBadgeText,
                 isCut ? styles.verdictBadgeTextCut : styles.verdictBadgeTextOk
@@ -74,23 +79,25 @@ export default function ResultScreen({ navigation }) {
                 {isCut ? 'RECOMENDAÇÃO: CORTAR' : 'RECOMENDAÇÃO: NÃO CORTAR'}
               </Text>
             </View>
-            <Ionicons 
-              name={isCut ? 'warning' : 'checkmark-circle'} 
-              size={24} 
-              color={isCut ? colors.error : colors.success} 
-            />
+            <View style={[styles.verdictIconCircle, { backgroundColor: isCut ? colors.errorBg : colors.successBg }]}>
+              <Ionicons 
+                name={isCut ? 'alert-circle' : 'checkmark-circle'} 
+                size={22} 
+                color={isCut ? colors.error : colors.success} 
+              />
+            </View>
           </View>
 
           <Text style={[
             styles.verdictTitle,
-            { color: isCut ? '#991B1B' : '#166534' }
+            { color: isCut ? '#991B1B' : '#065F46' }
           ]}>
-            {isCut ? 'Intervenção Necessária' : 'Vegetação Conforme'}
+            {isCut ? 'Intervenção Necessária' : 'Vegetação em Conformidade'}
           </Text>
 
           <Text style={[
             styles.verdictDesc,
-            { color: isCut ? '#7F1D1D' : '#14532D' }
+            { color: isCut ? '#7F1D1D' : '#047857' }
           ]}>
             {evaluation.justification}
           </Text>
@@ -102,17 +109,22 @@ export default function ResultScreen({ navigation }) {
             <Image source={{ uri: draft.imageUri }} style={styles.evidenceThumb} resizeMode="cover" />
             <View style={{ flex: 1 }}>
               <Text style={styles.evidenceTitle}>Evidência Analisada</Text>
-              <Text style={styles.evidenceSubtitle}>
-                Confiança do modelo: <Text style={{ fontWeight: '700', color: colors.primary }}>{confidenceFormatted}</Text>
-              </Text>
+              <View style={styles.confidenceRow}>
+                <Ionicons name="sparkles" size={13} color={colors.primary} />
+                <Text style={styles.evidenceSubtitle}>
+                  Confiança do modelo: <Text style={{ fontWeight: '800', color: colors.primaryDark }}>{confidenceFormatted}</Text>
+                </Text>
+              </View>
             </View>
-            <Ionicons name="shield-checkmark" size={22} color={colors.primary} />
           </View>
         ) : null}
 
         {/* Tabela de Parâmetros Técnicos */}
         <View style={styles.paramsCard}>
-          <Text style={styles.paramsTitle}>Parâmetros Verificados</Text>
+          <View style={styles.paramsHeader}>
+            <Ionicons name="receipt-outline" size={18} color={colors.primary} />
+            <Text style={styles.paramsTitle}>Parâmetros Verificados</Text>
+          </View>
 
           <View style={styles.paramRow}>
             <Text style={styles.paramLabel}>Rodovia / KM</Text>
@@ -130,17 +142,19 @@ export default function ResultScreen({ navigation }) {
           </View>
 
           <View style={styles.paramRow}>
-            <Text style={styles.paramLabel}>Altura Medida</Text>
-            <Text style={[
-              styles.paramValue, 
-              { color: isCut ? colors.error : colors.success, fontWeight: '800' }
-            ]}>
-              {evaluation.height} cm
-            </Text>
+            <Text style={styles.paramLabel}>Altura Calculada</Text>
+            <View style={[styles.heightBadge, { backgroundColor: isCut ? colors.errorBg : colors.successBg }]}>
+              <Text style={[
+                styles.heightBadgeText, 
+                { color: isCut ? colors.error : colors.success }
+              ]}>
+                {evaluation.height} cm
+              </Text>
+            </View>
           </View>
 
           <View style={[styles.paramRow, { borderBottomWidth: 0 }]}>
-            <Text style={styles.paramLabel}>Tolerância Máxima</Text>
+            <Text style={styles.paramLabel}>Tolerância Máxima CCR</Text>
             <Text style={styles.paramValue}>Até {evaluation.limit} cm</Text>
           </View>
         </View>
@@ -149,10 +163,10 @@ export default function ResultScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.finishButton} 
           onPress={handleFinish}
-          activeOpacity={0.85}
+          activeOpacity={0.88}
         >
           <Text style={styles.finishButtonText}>Salvar no Histórico e Concluir</Text>
-          <Ionicons name="checkmark-circle-outline" size={20} color="#FFFFFF" />
+          <Ionicons name="checkmark-circle" size={19} color="#FFFFFF" />
         </TouchableOpacity>
 
       </ScrollView>
@@ -167,7 +181,26 @@ const styles = StyleSheet.create({
     paddingBottom: 40 
   },
   header: { 
-    marginBottom: 20 
+    marginBottom: 18 
+  },
+  badgeSuccess: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 10,
+    paddingVertical: 4.5,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
+    gap: 5,
+    marginBottom: 8,
+  },
+  badgeSuccessText: {
+    fontSize: 9.5,
+    fontWeight: '800',
+    color: colors.primary,
+    letterSpacing: 0.6,
   },
   title: { 
     fontSize: 26, 
@@ -176,24 +209,25 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5 
   },
   subtitle: { 
-    fontSize: 14, 
+    fontSize: 13.5, 
     color: colors.textMuted, 
     marginTop: 4, 
-    lineHeight: 20 
+    lineHeight: 19 
   },
   verdictCard: {
     borderRadius: 22,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1.5,
+    ...shadows.sm,
+  },
+  verdictCardOk: {
+    backgroundColor: '#F0FDF4',
+    borderColor: '#BBF7D0',
   },
   verdictCardCut: {
     backgroundColor: '#FEF2F2',
     borderColor: '#FECACA',
-  },
-  verdictCardOk: {
-    backgroundColor: '#ECFDF5',
-    borderColor: '#A7F3D0',
   },
   verdictHeader: {
     flexDirection: 'row',
@@ -202,76 +236,105 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   verdictBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  verdictBadgeCut: {
-    backgroundColor: '#FEE2E2',
+    paddingVertical: 4.5,
+    borderRadius: 20,
+    gap: 6,
   },
   verdictBadgeOk: {
     backgroundColor: '#DCFCE7',
   },
+  verdictBadgeCut: {
+    backgroundColor: '#FEE2E2',
+  },
+  verdictDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
   verdictBadgeText: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '800',
     letterSpacing: 0.5,
-  },
-  verdictBadgeTextCut: {
-    color: '#991B1B',
   },
   verdictBadgeTextOk: {
     color: '#166534',
   },
+  verdictBadgeTextCut: {
+    color: '#991B1B',
+  },
+  verdictIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   verdictTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
+    letterSpacing: -0.3,
     marginBottom: 6,
   },
   verdictDesc: {
-    fontSize: 14,
-    lineHeight: 22,
+    fontSize: 13.5,
+    lineHeight: 19,
     fontWeight: '500',
   },
   evidenceCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 12,
+    borderRadius: 20,
+    padding: 14,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.borderLight,
+    gap: 14,
+    ...shadows.sm,
   },
   evidenceThumb: {
-    width: 52,
-    height: 52,
-    borderRadius: 10,
+    width: 64,
+    height: 64,
+    borderRadius: 14,
+    backgroundColor: '#0F172A',
   },
   evidenceTitle: {
-    fontSize: 14,
+    fontSize: 14.5,
     fontWeight: '700',
     color: colors.text,
+    marginBottom: 4,
+  },
+  confidenceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   evidenceSubtitle: {
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.textMuted,
-    marginTop: 2,
   },
   paramsCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 18,
+    borderRadius: 22,
+    padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.borderLight,
+    ...shadows.sm,
+  },
+  paramsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
   },
   paramsTitle: {
     fontSize: 15,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 12,
   },
   paramRow: {
     flexDirection: 'row',
@@ -279,17 +342,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 11,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: colors.borderLight,
   },
   paramLabel: {
     fontSize: 13,
     color: colors.textMuted,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   paramValue: {
-    fontSize: 13,
+    fontSize: 13.5,
     fontWeight: '700',
     color: colors.text,
+  },
+  heightBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  heightBadgeText: {
+    fontSize: 13.5,
+    fontWeight: '800',
   },
   finishButton: {
     flexDirection: 'row',
@@ -299,15 +371,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 3,
+    ...shadows.primary,
   },
   finishButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 15.5,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
 });
+

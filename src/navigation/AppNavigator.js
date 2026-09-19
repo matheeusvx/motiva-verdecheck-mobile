@@ -1,9 +1,8 @@
 // src/navigation/AppNavigator.js
 import React from 'react';
-
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Platform } from 'react-native';
 
 // Importação do Contexto para proteger as rotas
 import { useInspection } from '../contexts/InspectionContext';
@@ -18,7 +17,7 @@ import ProcessingScreen from '../screens/ProcessingScreen';
 import ResultScreen from '../screens/ResultScreen';
 import InspectionDetailScreen from '../screens/InspectionDetailScreen';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,20 +30,22 @@ function MainTabs() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textLight,
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '700', marginBottom: 6 },
+        tabBarLabelStyle: { 
+          fontSize: 11.5, 
+          fontWeight: '700', 
+          marginBottom: Platform.OS === 'ios' ? 0 : 6,
+          letterSpacing: 0.1
+        },
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
-          borderTopColor: colors.border,
-          height: 64,
+          borderTopColor: colors.borderLight,
+          height: Platform.OS === 'ios' ? 88 : 68,
           paddingTop: 8,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.03,
-          shadowRadius: 8,
-          elevation: 4,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          ...shadows.md,
         },
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
           if (route.name === 'Início') {
             iconName = focused ? 'home' : 'home-outline';
@@ -53,7 +54,11 @@ function MainTabs() {
           } else if (route.name === 'Histórico') {
             iconName = focused ? 'document-text' : 'document-text-outline';
           }
-          return <Ionicons name={iconName} size={22} color={color} />;
+          return (
+            <View style={[styles.tabIconWrapper, focused && styles.tabIconWrapperActive]}>
+              <Ionicons name={iconName} size={21} color={focused ? colors.primary : color} />
+            </View>
+          );
         },
       })}
     >
@@ -68,7 +73,7 @@ function MainTabs() {
 export default function AppNavigator() {
   const { user } = useInspection();
 
-  // Se o contexto ainda estiver carregando os dados do AsyncStorage (user inicial é indefinido ou nulo)
+  // Se o contexto ainda estiver carregando os dados do AsyncStorage
   if (!user) {
     return (
       <View style={styles.loadingContainer}>
@@ -78,12 +83,17 @@ export default function AppNavigator() {
   }
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+      screenOptions={{ 
+        headerShown: false,
+        animation: 'slide_from_right'
+      }}
+    >
       {user.name === 'Inspetor' ? (
-        // Se o usuário não está logado (nome padrão), essa fila fica ativa
+        // Se o usuário não está logado
         <Stack.Screen name="Login" component={LoginScreen} />
       ) : (
-        // Se o usuário está logado (ex: Lucas), essa fila assume o controle
+        // Se o usuário está logado
         <>
           <Stack.Screen name="Home" component={MainTabs} />
           <Stack.Screen name="CameraMock" component={CameraMockScreen} />
@@ -97,20 +107,20 @@ export default function AppNavigator() {
 }
 
 const styles = StyleSheet.create({
-  tabIconContainer: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+  tabIconWrapper: {
+    width: 40,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabIconActive: {
-    backgroundColor: '#EEF2FF', 
+  tabIconWrapperActive: {
+    backgroundColor: colors.primaryLight,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC'
+    backgroundColor: colors.background
   }
-});
+});

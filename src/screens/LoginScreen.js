@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  TextInput, 
-  TouchableOpacity, 
-  KeyboardAvoidingView, 
-  Platform,
-  ScrollView,
-  Alert
-} from 'react-native';
+   StyleSheet, 
+   Text, 
+   View, 
+   TextInput, 
+   TouchableOpacity, 
+   KeyboardAvoidingView, 
+   Platform,
+   ScrollView,
+   Alert
+ } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useInspection } from '../contexts/InspectionContext';
-import { colors } from '../utils/theme';
+import { colors, shadows } from '../utils/theme';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
+  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const { loginUser } = useInspection();
 
   const handleLogin = async () => {
@@ -44,33 +46,50 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
-        {/* Marca e Identidade */}
+        {/* Marca e Identidade Visual Premium */}
         <View style={styles.brandContainer}>
-          <View style={styles.logoCircle}>
-            <Ionicons name="leaf" size={32} color={colors.primary} />
+          <View style={styles.logoGlowWrapper}>
+            <View style={styles.logoCircle}>
+              <Ionicons name="leaf" size={32} color={colors.primary} />
+            </View>
           </View>
           <Text style={styles.logoTitle}>VerdeCheck</Text>
           <Text style={styles.logoSubtitle}>Inspeção e Conservação de Rodovias</Text>
-          <View style={styles.pillBadge}>
-            <Text style={styles.pillBadgeText}>CCR MOTIVA</Text>
+          
+          <View style={styles.badgeRow}>
+            <View style={styles.pillBadge}>
+              <View style={styles.statusDot} />
+              <Text style={styles.pillBadgeText}>CCR MOTIVA</Text>
+            </View>
+            <View style={[styles.pillBadge, styles.pillBadgeSecondary]}>
+              <Text style={styles.pillBadgeSecondaryText}>SISTEMA OPERACIONAL</Text>
+            </View>
           </View>
         </View>
 
-        {/* Formulário Limpo */}
+        {/* Formulário Limpo e Sofisticado */}
         <View style={styles.formCard}>
           <Text style={styles.formTitle}>Acesse sua conta</Text>
+          <Text style={styles.formSubtitle}>Entre com suas credenciais corporativas</Text>
 
           {/* Campo E-mail */}
           <View style={styles.inputWrapper}>
             <Text style={styles.inputLabel}>E-mail institucional</Text>
-            <View style={styles.inputBox}>
-              <Ionicons name="mail-outline" size={18} color={colors.textLight} style={styles.inputIcon} />
+            <View style={[styles.inputBox, isFocusedEmail && styles.inputBoxFocused]}>
+              <Ionicons 
+                name="mail-outline" 
+                size={19} 
+                color={isFocusedEmail ? colors.primary : colors.textLight} 
+                style={styles.inputIcon} 
+              />
               <TextInput
                 style={styles.textInput}
                 placeholder="nome@motiva.com"
                 placeholderTextColor={colors.textLight}
                 value={email}
                 onChangeText={setEmail}
+                onFocus={() => setIsFocusedEmail(true)}
+                onBlur={() => setIsFocusedEmail(false)}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -79,34 +98,45 @@ export default function LoginScreen() {
 
           {/* Campo Senha */}
           <View style={styles.inputWrapper}>
-            <Text style={styles.inputLabel}>Senha</Text>
-            <View style={styles.inputBox}>
-              <Ionicons name="lock-closed-outline" size={18} color={colors.textLight} style={styles.inputIcon} />
+            <Text style={styles.inputLabel}>Senha de acesso</Text>
+            <View style={[styles.inputBox, isFocusedPassword && styles.inputBoxFocused]}>
+              <Ionicons 
+                name="lock-closed-outline" 
+                size={19} 
+                color={isFocusedPassword ? colors.primary : colors.textLight} 
+                style={styles.inputIcon} 
+              />
               <TextInput
                 style={styles.textInput}
-                placeholder="Sua senha de acesso"
+                placeholder="Sua senha corporativa"
                 placeholderTextColor={colors.textLight}
                 value={password}
                 onChangeText={setPassword}
+                onFocus={() => setIsFocusedPassword(true)}
+                onBlur={() => setIsFocusedPassword(false)}
                 secureTextEntry
               />
             </View>
           </View>
 
           {/* Botão Entrar */}
-          <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} activeOpacity={0.85}>
+          <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} activeOpacity={0.88}>
             <Text style={styles.primaryButtonText}>Entrar no Aplicativo</Text>
             <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
           </TouchableOpacity>
 
           {/* Atalho Demo Amigável */}
-          <TouchableOpacity style={styles.demoButton} onPress={handleQuickDemoLogin} activeOpacity={0.75}>
-            <Ionicons name="flash-outline" size={16} color={colors.primary} />
-            <Text style={styles.demoButtonText}>Preencher com Usuário Demo</Text>
+          <TouchableOpacity style={styles.demoButton} onPress={handleQuickDemoLogin} activeOpacity={0.8}>
+            <Ionicons name="flash" size={15} color={colors.primary} />
+            <Text style={styles.demoButtonText}>Acessar como Inspetor Demo</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.copyright}>Desenvolvido para o Challenge FIAP + CCR Motiva</Text>
+        {/* Rodapé Corporativo */}
+        <View style={styles.footerContainer}>
+          <Text style={styles.copyright}>Desenvolvido para o Challenge FIAP • CCR Motiva</Text>
+          <Text style={styles.versionTag}>Versão 1.0.0 (Build 2026)</Text>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -115,87 +145,124 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.background,
   },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 36,
+    paddingHorizontal: 22,
+    paddingVertical: 32,
   },
   brandContainer: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 28,
+  },
+  logoGlowWrapper: {
+    marginBottom: 14,
   },
   logoCircle: {
     width: 68,
     height: 68,
-    borderRadius: 34,
-    backgroundColor: colors.primaryLight,
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    borderWidth: 1.5,
+    borderColor: colors.successBorder,
+    ...shadows.md,
   },
   logoTitle: {
     fontSize: 28,
     fontWeight: '800',
     color: colors.text,
-    letterSpacing: -0.5,
+    letterSpacing: -0.6,
   },
   logoSubtitle: {
-    fontSize: 14,
+    fontSize: 13.5,
     color: colors.textMuted,
-    marginTop: 2,
+    marginTop: 3,
     fontWeight: '500',
+    textAlign: 'center',
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 12,
   },
   pillBadge: {
-    backgroundColor: '#F1F5F9',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primaryLight,
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 4.5,
     borderRadius: 20,
-    marginTop: 10,
+    borderWidth: 1,
+    borderColor: colors.successBorder,
+    gap: 5,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.primary,
   },
   pillBadgeText: {
     fontSize: 10,
     fontWeight: '800',
+    color: colors.primary,
+    letterSpacing: 0.8,
+  },
+  pillBadgeSecondary: {
+    backgroundColor: '#FFFFFF',
+    borderColor: colors.border,
+  },
+  pillBadgeSecondaryText: {
+    fontSize: 9.5,
+    fontWeight: '700',
     color: colors.textMuted,
-    letterSpacing: 1,
+    letterSpacing: 0.6,
   },
   formCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 22,
+    borderRadius: 24,
+    padding: 24,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
-    elevation: 2,
+    borderColor: colors.borderLight,
+    ...shadows.md,
   },
   formTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 19,
+    fontWeight: '800',
     color: colors.text,
+    letterSpacing: -0.3,
+  },
+  formSubtitle: {
+    fontSize: 13,
+    color: colors.textMuted,
+    marginTop: 2,
     marginBottom: 20,
   },
   inputWrapper: {
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.text,
-    marginBottom: 6,
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: colors.textSecondary,
+    marginBottom: 7,
   },
   inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8FAFC',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
+    borderColor: colors.border,
     borderRadius: 14,
     paddingHorizontal: 14,
+  },
+  inputBoxFocused: {
+    borderColor: colors.primary,
+    backgroundColor: '#FFFFFF',
   },
   inputIcon: {
     marginRight: 10,
@@ -203,7 +270,7 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     paddingVertical: 13,
-    fontSize: 15,
+    fontSize: 14.5,
     color: colors.text,
     fontWeight: '500',
   },
@@ -213,19 +280,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     backgroundColor: colors.primary,
-    borderRadius: 14,
+    borderRadius: 16,
     paddingVertical: 15,
-    marginTop: 6,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 3,
+    marginTop: 8,
+    ...shadows.primary,
   },
   primaryButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
   demoButton: {
     flexDirection: 'row',
@@ -234,9 +298,9 @@ const styles = StyleSheet.create({
     gap: 6,
     backgroundColor: colors.primaryLight,
     borderWidth: 1,
-    borderColor: '#A7F3D0',
+    borderColor: colors.successBorder,
     borderRadius: 14,
-    paddingVertical: 13,
+    paddingVertical: 12.5,
     marginTop: 12,
   },
   demoButtonText: {
@@ -244,11 +308,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
   },
+  footerContainer: {
+    marginTop: 28,
+    alignItems: 'center',
+  },
   copyright: {
     textAlign: 'center',
-    fontSize: 12,
-    color: colors.textLight,
-    marginTop: 28,
+    fontSize: 11.5,
+    color: colors.textMuted,
   },
+  versionTag: {
+    fontSize: 10.5,
+    color: colors.textLight,
+    marginTop: 3,
+    fontWeight: '500',
+  }
 });
+
 
