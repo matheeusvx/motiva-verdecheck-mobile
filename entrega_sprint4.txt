@@ -1,0 +1,34 @@
+================================================================================
+ENTREGA SPRINT 4 — VERSÃO FINAL, APK E PLANO DE NEGÓCIO
+CHALLENGE FIAP + CCR MOTIVA | DISCIPLINA: CROSS PLATFORM MOBILE APPLICATION
+PROJETO: MOTIVA VERDECHECK MOBILE
+================================================================================
+
+1. INTEGRANTES DO GRUPO (NOME E RM):
+- Matheus Morelli - RM: [INSERIR_RM]
+- Rafael Ferreira - RM: [INSERIR_RM]
+- Cauã Muniz - RM: [INSERIR_RM]
+- Henrique Mortari - RM: [INSERIR_RM]
+- Victor Mortari - RM: [INSERIR_RM]
+- Lucas Eiki - RM: [INSERIR_RM]
+
+2. LINK DO REPOSITÓRIO GITHUB FINAL COM README CONSOLIDADO:
+https://github.com/matheeusvx/motiva-verdecheck-mobile
+
+3. LINK DO APK FINAL PARA DOWNLOAD (GOOGLE DRIVE / GITHUB RELEASES):
+https://github.com/matheeusvx/motiva-verdecheck-mobile/releases
+(ou: https://drive.google.com/drive/folders/[SEU_LINK_DO_GOOGLE_DRIVE])
+
+4. LINK DO VÍDEO FINAL DE PITCH E DEMONSTRAÇÃO NO YOUTUBE (NÃO LISTADO):
+https://youtu.be/[SEU_LINK_DO_VIDEO_NAO_LISTADO]
+
+================================================================================
+NOTAS COMPLEMENTARES DA ENTREGA:
+- O README.md do repositório foi consolidado como documento-âncora reunindo todas
+  as entregas das quatro Sprints, instruções completas de instalação do APK no
+  Android e resumo executivo do plano de negócio.
+- O documento aprofundado do Plano de Negócio CCR Motiva encontra-se em:
+  docs/plano-de-negocio.md
+- O documento de testes manuais da aplicação encontra-se em:
+  docs/testes-manuais-sprint3.md
+================================================================================

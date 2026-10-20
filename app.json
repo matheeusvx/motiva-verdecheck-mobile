@@ -16,9 +16,16 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.motiva.verdecheck",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#6D28D9"
-      }
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro"

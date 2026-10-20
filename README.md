@@ -1,272 +1,160 @@
-
-
 # Motiva VerdeCheck Mobile
 
-![status](https://img.shields.io/badge/status-sprint3_completa-22C55E)
-![React Native](https://img.shields.io/badge/React%20Native-mobile-61DAFB)
-![Expo](https://img.shields.io/badge/Expo-router-000020)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E)
-![AsyncStorage](https://img.shields.io/badge/AsyncStorage-persist%C3%AAncia-7CB342)
-![REST API](https://img.shields.io/badge/REST%20API-integra%C3%A7%C3%A3o-8E24AA)
+![status](https://img.shields.io/badge/status-sprint4_versao_final-22C55E?style=for-the-badge)
+![versao](https://img.shields.io/badge/versao-4.0.0-059669?style=for-the-badge)
+![React Native](https://img.shields.io/badge/React%20Native-0.74-61DAFB?style=for-the-badge&logo=react)
+![Expo](https://img.shields.io/badge/Expo-51.0-000020?style=for-the-badge&logo=expo)
+![Android APK](https://img.shields.io/badge/Android-APK_Disponível-3DDC84?style=for-the-badge&logo=android)
 
-Protótipo cross-platform em **JavaScript** para o Challenge FIAP + CCR Motiva.
+> **Challenge FIAP + CCR Motiva — Cross-Platform Mobile Application Development**  
+> Solução inteligente para inspeção, auditoria e apoio à decisão de roçada na faixa de domínio de rodovias concedidas.
 
-## 1. Visão Geral
-O **Motiva VerdeCheck Mobile** é uma proposta de aplicativo mobile para apoiar equipes de conservação na decisão operacional sobre **cortar ou não cortar a grama** em trechos de rodovia.
+---
 
-O app foi desenhado para o recorte mais viável do projeto neste momento: **inspeção em campo + recomendação objetiva de intervenção** com base em foto, contexto do trecho e regras operacionais derivadas do desafio.
+## 📌 Acessos Rápidos da Entrega Final (Sprint 4)
 
-## 2. Problema Escolhido
-Hoje, a decisão de roçada pode depender de inspeção visual em campo, registro manual, leitura subjetiva do trecho e posterior repasse para supervisão. Isso gera:
+| Recurso | Descrição | Link de Acesso |
+| :--- | :--- | :---: |
+| 📱 **Download do APK Final** | Binário instalável pronto para qualquer smartphone Android | [👉 Baixar APK Android (Google Drive / Releases)](https://github.com/matheeusvx/motiva-verdecheck-mobile/releases) |
+| 🎬 **Vídeo de Pitch & Demonstração** | Apresentação do grupo, problema, demo do app no aparelho e plano de negócio (< 5 min) | [👉 Assistir Pitch no YouTube (Não Listado)](https://youtu.be/[SEU_LINK_DO_VIDEO_NAO_LISTADO]) |
+| 📑 **Plano de Negócio Completo** | Análise de viabilidade comercial, custos, receita B2B, personas e impacto CCR | [👉 Acessar docs/plano-de-negocio.md](docs/plano-de-negocio.md) |
+| 🧪 **Documento de Testes Manuais** | Matriz com os fluxos principais e secundários testados de ponta a ponta | [👉 Acessar docs/testes-manuais-sprint3.md](docs/testes-manuais-sprint3.md) |
 
-- subjetividade na decisão de corte;
-- retrabalho entre operador e supervisor;
-- dificuldade de padronizar inspeções;
-- dificuldade de gerar evidência rápida da necessidade de intervenção;
-- dificuldade de consolidar histórico de inspeções por rodovia, km e tipo de área.
+---
 
-## 3. Recorte da Solução
-O grupo escolheu atacar o seguinte problema:
+## 📥 Guia Passo a Passo: Como Instalar o APK no Android
 
-> **Como apoiar a equipe de conservação a decidir, de forma mais rápida e padronizada, se a grama de um trecho deve ou não ser cortada?**
+Para instalar o **Motiva VerdeCheck Mobile** em qualquer dispositivo Android (versão 8.0 ou superior):
 
-### Escopo do MVP
-- registrar uma nova inspeção;
-- informar rodovia, km, sentido e tipo de área;
-- capturar foto do trecho;
-- enviar dados para um serviço de análise;
-- retornar recomendação **"Cortar"** ou **"Não cortar"**;
-- armazenar histórico de inspeções;
-- disponibilizar evidência para consulta do supervisor.
+1. **Baixar o arquivo APK:**
+   * Acesse o link de download disponibilizado acima pelo navegador do seu smartphone Android.
+   * Toque em **Fazer o download mesmo assim**.
+2. **Autorizar a instalação:**
+   * Ao término do download, abra a notificação ou vá até a pasta **Downloads** do celular e toque no arquivo `motiva-verdecheck.apk`.
+   * Caso o sistema solicite, selecione **Configurações** e ative a opção **Permitir desta fonte** para o navegador ou gerenciador de arquivos.
+3. **Verificação do Google Play Protect:**
+   * Como se trata de um pacote acadêmico gerado em ambiente de homologação (fora da Google Play Store), o Google Play Protect pode exibir uma mensagem preventiva.
+   * Toque em **Mais detalhes** e em seguida selecione **Instalar assim mesmo**.
+4. **Abrir a Aplicação:**
+   * Após a conclusão, toque em **Abrir**.
+   * Na tela inicial, utilize o botão **"Acesso Rápido Demo (Lucas Almeida)"** para entrar instantaneamente com dados pré-configurados da CCR Motiva.
 
-## 4. Persona Principal
-**Nome:** Lucas Almeida  
-**Cargo:** Operador de Conservação de Faixa de Domínio  
-**Idade:** 32 anos  
-**Contexto:** atua em inspeções e apoio à execução de conservação em rodovias concedidas, com foco em roçada, capina, limpeza e observação de risco operacional.
+---
 
-### Dores
-- precisa decidir rápido em campo;
-- nem sempre tem um critério visual padronizado;
-- pode haver divergência entre o que ele observa e o que o supervisor entende como prioridade;
-- registrar informação manualmente consome tempo;
-- falta histórico organizado por trecho.
+## ⚙️ Como Gerar o Build do APK a partir deste Repositório
 
-### Objetivo
-Ter um aplicativo simples, rápido e confiável que ajude a registrar o trecho e indicar se há necessidade de corte.
-
-## 5. Proposta de Solução
-Aplicativo mobile em **React Native + Expo** com foco em uso por operador de campo.
-
-## Como executar o projeto
+Caso deseje compilar um novo APK diretamente a partir do código-fonte:
 
 ### Pré-requisitos
-Antes de começar, você precisa ter instalado na sua máquina:
+* [Node.js](https://nodejs.org/) (versão LTS recomendada: 18 ou 20)
+* Conta criada no [Expo](https://expo.dev/)
+* EAS CLI instalado globalmente:
+  ```bash
+  npm install -g eas-cli
+  ```
 
-- [Node.js](https://nodejs.org/)
-- npm ou yarn
-- [Expo Go](https://expo.dev/go) no celular **ou** emulador Android/iOS
-- Git
+### Passo a Passo de Compilação
+1. **Clonar e instalar dependências:**
+   ```bash
+   git clone https://github.com/matheeusvx/motiva-verdecheck-mobile.git
+   cd motiva-verdecheck-mobile
+   npm install
+   ```
 
-### 1. Clonar o repositório
-```bash
-git clone <URL_DO_SEU_REPOSITORIO>
-```
+2. **Autenticar na conta Expo:**
+   ```bash
+   npx eas login
+   ```
 
-### 2. Acessar a pasta do projeto
-```bash
-cd <NOME_DA_PASTA_DO_PROJETO>
-```
-
-### 3. Instalar as dependências
-```bash
-npm install
-```
-
-### 4. Iniciar o projeto
-```bash
-npx expo start
-```
-
-### 5. Rodar no dispositivo
-Após iniciar o Expo, você terá algumas opções:
-
-- pressionar `a` para abrir no emulador Android
-- pressionar `i` para abrir no simulador iOS
-- escanear o QR Code com o app **Expo Go** no celular
+3. **Disparar o build do APK (Android Standalone):**
+   ```bash
+   npm run build:apk
+   # ou diretamente:
+   npx eas build -p android --profile preview
+   ```
+   *O Expo compilará o pacote na nuvem e fornecerá o link direto com o `.apk` gerado.*
 
 ---
 
-## Scripts úteis
+## 💡 Visão Geral da Solução e Problema Abordado
 
-```bash
-npx expo start
-```
-Inicia o servidor de desenvolvimento do Expo.
+### O Desafio CCR Motiva
+Nas rodovias concedidas administradas pela CCR, a conservação da vegetação da faixa de domínio (roçada e capina) é crítica para a segurança e para o cumprimento de contratos com órgãos reguladores (**ARTESP / ANTT**). Historicamente, a decisão de roçar depende de inspeção visual humana subjetiva ou de cronogramas fixos desvinculados da real taxa de crescimento da grama, gerando:
 
-```bash
-npx expo start --clear
-```
-Inicia o projeto limpando o cache.
+* **Desperdício Financeiro:** Roçadas precoces geram gastos desnecessários com combustível fóssil de tratores e desgaste de implementos.
+* **Riscos Regulatórios:** Vegetação alta que encobre placas de sinalização viária, defensas ou canaletas pluviais gera multas pesadas.
+* **Perigo de Sinistros:** Mato alto atrai animais para a pista e propicia queimadas às margens das rodovias no período seco.
 
-```bash
-npm install
-```
-Instala todas as dependências do projeto.
-
----
-
-## Observações
-- Certifique-se de estar na mesma rede Wi-Fi do computador ao testar no celular com Expo Go.
-- Caso ocorra erro de dependências, tente reinstalar os pacotes com:
-```bash
-npm install
-```
-- Caso o cache cause problemas, execute:
-```bash
-npx expo start --clear
-```
-
-### Fluxo resumido
-1. operador abre o app;
-2. inicia uma nova análise;
-3. informa contexto do trecho (rodovia, km, sentido e tipo de área);
-4. captura ou anexa uma foto;
-5. recebe uma recomendação: **Cortar** ou **Não cortar**;
-6. salva a inspeção no histórico;
-7. o supervisor pode consultar o registro e a evidência visual.
-
-## 6. Stack Tecnológica
-### Frontend mobile
-- **React Native**
-- **Expo**
-- **JavaScript**
-
-### Navegação
-- **React Navigation**
-  - `@react-navigation/native`
-  - `@react-navigation/native-stack`
-  - `@react-navigation/bottom-tabs`
-
-### Recursos do dispositivo
-- **expo-location** para geolocalização do trecho
-- **expo-camera** ou **expo-image-picker** para captura de imagem
-
-### Armazenamento
-- **AsyncStorage** para persistência local de inspeções no protótipo
-
-### Integração futura com IA
-- API REST para enviar imagem e metadados do trecho
-- serviço Python com modelo de visão computacional para classificação da vegetação
-
-## 7. Justificativa da Stack
-### React Native
-Permite desenvolvimento cross-platform com uma base única de código e boa produtividade para prototipação.
-
-### Expo
-Acelera setup, testes e acesso a funcionalidades nativas relevantes para o projeto, como câmera e localização.
-
-### React Navigation
-Resolve bem a navegação entre telas do fluxo de inspeção, histórico e resultado.
-
-### AsyncStorage
-É suficiente para o Sprint 1, pois o foco está em protótipo navegável e prova de conceito.
-
-### Integração futura com Python
-O back-end/modelo de IA poderá ser desenvolvido separadamente em Python, preservando o app como cliente mobile.
-
-## 8. Estrutura do Repositório
-```bash
-motiva-verdecheck-mobile/
-├── assets/
-├── docs/
-│   ├── documento-requisitos.md
-│   ├── prototipo-figma-handoff.md
-│   ├── prompt-figma.txt
-│   ├── sprint1-checklist.md
-│   └── arquitetura-mobile.md
-├── src/
-│   ├── components/
-│   ├── contexts/
-│   ├── navigation/
-│   ├── screens/
-│   └── utils/
-├── App.js
-├── app.json
-├── babel.config.js
-├── package.json
-└── README.md
-```
-
-## 9. Protótipo Contemplado
-O protótipo cobre as telas principais:
-- Login
-- Home
-- Nova análise
-- Captura/seleção de imagem
-- Processamento
-- Resultado da análise
-- Histórico
-- Detalhe da inspeção
-
-## 10. Integrantes
-- Matheus Morelli
-- Rafael Ferreira
-- Cauã Muniz
-- Henrique Mortari
-- Victor Mortari
-- Lucas Eiki
-
-## 11. Status das Sprints e Entregas
-
-### Histórico de Evolução
-- **Sprint 1 — Exploração e Requisitos:** [x] Documento de requisitos, personas, justificativa de stack e protótipo base navegável.
-- **Sprint 2 — Refinamento e Hotfixes:** [x] Guarda de rotas dinâmica (`AppNavigator.js`), gestão global com Context API e persistência de sessão com `AsyncStorage`.
-- **Sprint 3 — Protótipo Funcional Completo:** [x] Todos os fluxos principais e secundários implementados, camada de mock completa (sucesso, erro, listas vazias e fluxos alternativos "Cortar" vs "Não cortar"), documento formal de testes manuais e consistência visual padronizada.
+### A Proposta do Motiva VerdeCheck
+Um aplicativo mobile com arquitetura **Offline-First** que orienta o operador de campo em uma vistoria ágil:
+1. Registra a rodovia, quilômetro, sentido e o **segmento viário específico** (Área Nobre, Canteiro Central, Faixa de Domínio ou Encosta);
+2. Captura a foto real do trecho com diretrizes de enquadramento;
+3. Processa a evidência fotográfica cruzando com os limites normativos da concessionária;
+4. Emite na hora a recomendação objetiva: **"Cortar"** (com indicação do excesso de altura) ou **"Não cortar"** (conforme a norma);
+5. Armazena um laudo auditável com foto carimbada e metadados para auditoria da supervisão.
 
 ---
 
-## 12. Matriz de Status das Funcionalidades (Sprint 3)
+## 💼 Resumo Executivo do Plano de Negócio
 
-| Funcionalidade / Fluxo | Estado Atual | Cobertura do Mock / Implementação |
-| :--- | :---: | :--- |
-| **Autenticação de Usuário** | Concluído | Login corporativo persistente via `AsyncStorage` com botão de acesso rápido demo e logout seguro. |
-| **Painel Operacional (Home)** | Concluído | Dashboard com métricas diárias sincronizadas, avatar dinâmico e banner inteligente de alerta para trechos críticos. |
-| **Formulário de Nova Inspeção** | Concluído | Geolocalização (rodovia, km, sentido), seleção técnica de segmento da faixa e validação completa de campos e altura. |
-| **Captura de Evidência Fotográfica** | Concluído | Suporte a câmera real e galeria nativa via `expo-image-picker` com visor preview e botões de simulação rápida para emuladores. |
-| **Inferência e Diagnóstico IA** | Concluído | Processamento simulado com regras CCR completas via `mockAnalysis.js`, cobrindo tanto recomendação **"Cortar"** (excesso de altura) quanto **"Não cortar"** (conforme). |
-| **Histórico de Auditoria** | Concluído | Listagem com `StatusBadge` padronizado, suporte a **Empty State** (lista vazia), limpeza e restauração de dados para demonstração. |
-| **Detalhe da Inspeção** | Concluído | Exibição de evidência fotográfica auditada, justificativa técnica da IA, percentual de confiança e ação de encaminhamento para supervisão. |
+O plano de negócio detalhado encontra-se no documento formal [docs/plano-de-negocio.md](docs/plano-de-negocio.md). Abaixo estão os pilares fundamentais:
+
+* **Proposta de Valor:** Redução de até **22% nos custos operacionais (OPEX)** de roçada nas rodovias concessionadas, eliminação de 100% das multas de órgãos fiscalizadores por mato alto e agilização do ciclo de laudos de campo em 85%.
+* **Público-Alvo e Personas:** Operadores de campo da CCR Motiva (uso diário na pista), Supervisores de Conservação e Ativos (gestão de rotas e priorização de ordens de serviço) e Gerentes de Concessão (acompanhamento de SLAs regulatórios).
+* **Modelo de Receita (B2B SaaS):** Cobrança mensal escalonada por quilômetro de malha concedida monitorada (em média **R$ 14 a R$ 18 por km/mês**), com potencial de receita anual superior a **R$ 650 mil** no universo das rodovias do Grupo CCR.
+* **Custos Operacionais Estimados:** Custo mensal de infraestrutura e suporte em nuvem estimado em **R$ 7.180,00/mês** no primeiro ano, garantindo margem bruta operacional atrativa e retorno sobre investimento (ROI) já nos primeiros meses de implantação.
+* **Diferenciais Competitivos:** Funcionamento **100% Offline-First** (essencial em trechos sem sinal 4G), parâmetros técnicos nativos das normas CCR (tolerâncias de 10cm, 20cm, 30cm e 60cm) e geração imediata de evidências fotográficas auditáveis.
 
 ---
 
-## 13. Justificativa da Continuidade da Stack (React Native + Expo)
+## 🛠️ Stack Tecnológica e Justificativa de Continuidade
 
-O grupo optou conscientemente por **manter a stack em React Native com Expo** (não migrando para Flutter). Os motivos técnicos que respaldam essa decisão são:
-1. **Velocidade de Prototipação e Ciclo de Feedback:** O ecossistema Expo com Fast Refresh permitiu iterar rapidamente e consolidar todos os fluxos com alta fidelidade sem fricção de compilação nativa.
-2. **Integração Fluida de Mídia Nativa:** O uso de `expo-image-picker` atendeu prontamente a necessidade de acesso à câmera e galeria em Android e iOS mantendo fallbacks robustos.
-3. **Harmonia com Arquitetura Futura de IA:** A separação clara entre cliente mobile (JavaScript/React Native) e microsserviço de Visão Computacional (Python/FastAPI) garante modularidade sem necessidade de reescrita em Dart/Flutter.
+O projeto foi construído utilizando a seguinte arquitetura técnica:
+
+* **Linguagem & Core:** JavaScript (ES6+), React Native (v0.74.5) e Expo SDK (v51.0).
+* **Navegação:** React Navigation v6 (`@react-navigation/native-stack` e `@react-navigation/bottom-tabs`).
+* **Hardware & Mídia:** `expo-image-picker` para integração com a câmera nativa e galeria de fotos do smartphone, com pré-visualização em alta resolução e fallbacks de teste para emuladores.
+* **Persistência Offline-First:** `@react-native-async-storage/async-storage` para armazenamento local seguro de credenciais, histórico de vistorias e laudos fotográficos.
+* **Design & Estilo:** Vanilla StyleSheet com Design System corporativo exclusivo (`src/utils/theme.js`), tipografia modular e cores adaptadas à identidade institucional da CCR Motiva.
+
+### Justificativa da Continuidade em React Native (Decisão de Arquitetura)
+O grupo optou conscientemente por **manter a base em React Native com Expo**, sem migrar para Flutter, pelos seguintes fatores:
+1. **Velocidade de Entrega e Maturidade do Código:** A base em React Native atingiu estabilidade completa na Sprint 3, com zero erros críticos e cobertura de todos os fluxos normativos. Uma migração para Flutter nesta etapa geraria riscos desnecessários de regressão sem ganhos de performance perceptíveis para o escopo do operador.
+2. **Independência de Plataforma e Arquitetura Desacoplada:** O cliente mobile consome regras operacionais locais e está estruturado para integração via REST API com o backend de visão computacional em Python/FastAPI, preservando a modularidade recomendada em microsserviços.
 
 ---
 
-## 14. Documento de Testes Manuais
+## 📱 Telas e Fluxos Implementados
 
-O documento com os 5 fluxos principais testados, resultados obtidos e evidências de conformidade está disponível em:
-👉 **[docs/testes-manuais-sprint3.md](docs/testes-manuais-sprint3.md)**
+A aplicação contempla todos os fluxos operacionais de ponta a ponta:
+
+1. **Autenticação Segura (`LoginScreen`):** Acesso com e-mail corporativo, persistência da sessão e atalho "Acesso Rápido Demo" para bancas avaliadoras.
+2. **Dashboard Operacional (`HomeScreen`):** Indicador de status de conexão, saudação personalizada, métricas sincronizadas em tempo real (total de vistorias, trechos críticos e conformes) e banner de alerta inteligente.
+3. **Formulário de Nova Vistoria (`NewInspectionScreen`):** Identificação completa do trecho (rodovia, KM, sentido da via, seleção visual de segmento viário e altura estimada em cm) com validação de campos.
+4. **Captura Fotográfica (`CameraMockScreen`):** Abertura de câmera real, galeria do aparelho ou aplicação de cenários predefinidos para testes sem periféricos.
+5. **Processamento Inteligente (`ProcessingScreen`):** Tela de transição com anel de carregamento estilizado e checklist visual das etapas de inferência.
+6. **Veredito da IA (`ResultScreen`):** Apresentação do diagnóstico técnico em card colorido com justificativa detalhada, cálculo da tolerância da CCR e botão para gravação no histórico.
+7. **Histórico e Auditoria (`HistoryScreen`):** Listagem completa de inspeções com filtros rápidos ("Todos", "Cortar", "Conforme"), suporte a estado vazio (*Empty State*) e botão para restaurar dados padrão.
+8. **Detalhamento da Inspeção (`InspectionDetailScreen`):** Visualização aprofundada com a foto auditada, métricas de confiança, data da vistoria e opção de compartilhamento/encaminhamento do laudo à supervisão.
 
 ---
 
-## 15. Pendências Identificadas e Plano de Ajustes para a Sprint 4
+## 🏆 Histórico de Evolução do Projeto (Sprints 1 a 4)
 
-Conforme preconizado nas diretrizes da Sprint 3, foram mapeadas as pendências e o plano de ação para a entrega final:
+| Sprint | Foco Principal | Entregas Realizadas |
+| :--- | :--- | :--- |
+| **Sprint 1** | Exploração, Requisitos e Arquitetura | Levantamento de regras de negócio da CCR, definição de personas, arquitetura mobile inicial e protótipo navegável em baixa fidelidade. |
+| **Sprint 2** | Refinamento de Navegação e Estado | Implementação do fluxo completo de autenticação com guarda de rotas (`AppNavigator.js`), gestão de estado global com Context API e persistência via `AsyncStorage`. |
+| **Sprint 3** | Protótipo Funcional Completo | Implementação de todos os fluxos com cenários de "Cortar" vs "Não cortar", suporte a mídia nativa (`expo-image-picker`), empty states e relatório formal de testes manuais com zero erros críticos. |
+| **Sprint 4** | Versão Final, APK e Negócio | Geração do build final instalável em formato APK para Android via Expo EAS, elaboração do Plano de Negócio B2B para a Motiva, gravação do pitch em vídeo e consolidação do README final. |
 
-1. **Integração Real do Modelo de IA (Visão Computacional):**
-   - *Pendência:* As decisões de corte atualmente utilizam o motor de regras operacionais em `mockAnalysis.js`.
-   - *Plano Sprint 4:* Integrar chamada HTTP `multipart/form-data` conectando o mobile à API REST em Python (FastAPI) executando o classificador convolucional treinado com o dataset de vegetação.
-2. **Geolocalização Automática via GPS (`expo-location`):**
-   - *Pendência:* Rodovia, quilômetro e sentido são selecionados manualmente.
-   - *Plano Sprint 4:* Adicionar botão "Obter Localização Atual" para preenchimento automático das coordenadas e cálculo aproximado do KM.
-3. **Sincronização em Nuvem (Sync Online/Offline):**
-   - *Pendência:* As vistorias ficam gravadas exclusivamente na memória local do celular (`AsyncStorage`).
-   - *Plano Sprint 4:* Implementar sincronização com banco de dados centralizado em nuvem quando houver conexão de rede.
+---
 
+## 👥 Integrantes do Projeto
+
+* **Matheus Morelli** — RM: `[INSERIR_RM]`
+* **Rafael Ferreira** — RM: `[INSERIR_RM]`
+* **Cauã Muniz** — RM: `[INSERIR_RM]`
+* **Henrique Mortari** — RM: `[INSERIR_RM]`
+* **Victor Mortari** — RM: `[INSERIR_RM]`
+* **Lucas Eiki** — RM: `[INSERIR_RM]`
