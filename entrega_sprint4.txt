@@ -16,8 +16,8 @@ PROJETO: MOTIVA VERDECHECK MOBILE
 https://github.com/matheeusvx/motiva-verdecheck-mobile
 
 3. LINK DO APK FINAL PARA DOWNLOAD (GOOGLE DRIVE / GITHUB RELEASES):
-https://github.com/matheeusvx/motiva-verdecheck-mobile/releases
-(ou: https://drive.google.com/drive/folders/[SEU_LINK_DO_GOOGLE_DRIVE])
+https://drive.google.com/file/d/1-uEWAiEO1xUo_AeLz3LoHA-9eiJdD3Cg/view?usp=sharing
+(Backup GitHub Releases: https://github.com/matheeusvx/motiva-verdecheck-mobile/releases)
 
 4. LINK DO VÍDEO FINAL DE PITCH E DEMONSTRAÇÃO NO YOUTUBE (NÃO LISTADO):
 https://youtu.be/[SEU_LINK_DO_VIDEO_NAO_LISTADO]
