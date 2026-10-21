@@ -11,18 +11,18 @@
 
 ---
 
-## 📌 Acessos Rápidos da Entrega Final (Sprint 4)
+##  Acessos Rápidos da Entrega Final (Sprint 4)
 
 | Recurso | Descrição | Link de Acesso |
 | :--- | :--- | :---: |
-| 📱 **Download do APK Final** | Binário instalável pronto para qualquer smartphone Android | [👉 Baixar APK Android (Google Drive)](https://drive.google.com/file/d/1-uEWAiEO1xUo_AeLz3LoHA-9eiJdD3Cg/view?usp=sharing) |
-| 🎬 **Vídeo de Pitch & Demonstração** | Apresentação do grupo, problema, demo do app no aparelho e plano de negócio (< 5 min) | [👉 Assistir Pitch no YouTube (Não Listado)](https://youtu.be/[SEU_LINK_DO_VIDEO_NAO_LISTADO]) |
-| 📑 **Plano de Negócio Completo** | Análise de viabilidade comercial, custos, receita B2B, personas e impacto CCR | [👉 Acessar docs/plano-de-negocio.md](docs/plano-de-negocio.md) |
-| 🧪 **Documento de Testes Manuais** | Matriz com os fluxos principais e secundários testados de ponta a ponta | [👉 Acessar docs/testes-manuais-sprint3.md](docs/testes-manuais-sprint3.md) |
+|  **Download do APK Final** | Binário instalável pronto para qualquer smartphone Android | [👉 Baixar APK Android (Google Drive)](https://drive.google.com/file/d/1-uEWAiEO1xUo_AeLz3LoHA-9eiJdD3Cg/view?usp=sharing) |
+|  **Vídeo de Pitch & Demonstração** | Apresentação do grupo, problema, demo do app no aparelho e plano de negócio (< 5 min) | [👉 Assistir Pitch no YouTube (Não Listado)](https://youtu.be/[SEU_LINK_DO_VIDEO_NAO_LISTADO]) |
+|  **Plano de Negócio Completo** | Análise de viabilidade comercial, custos, receita B2B, personas e impacto CCR | [👉 Acessar docs/plano-de-negocio.md](docs/plano-de-negocio.md) |
+|  **Documento de Testes Manuais** | Matriz com os fluxos principais e secundários testados de ponta a ponta | [👉 Acessar docs/testes-manuais-sprint3.md](docs/testes-manuais-sprint3.md) |
 
 ---
 
-## 📥 Guia Passo a Passo: Como Instalar o APK no Android
+##  Guia Passo a Passo: Como Instalar o APK no Android
 
 Para instalar o **Motiva VerdeCheck Mobile** em qualquer dispositivo Android (versão 8.0 ou superior):
 
@@ -76,7 +76,7 @@ Caso deseje compilar um novo APK diretamente a partir do código-fonte:
 
 ---
 
-## 💡 Visão Geral da Solução e Problema Abordado
+##  Visão Geral da Solução e Problema Abordado
 
 ### O Desafio CCR Motiva
 Nas rodovias concedidas administradas pela CCR, a conservação da vegetação da faixa de domínio (roçada e capina) é crítica para a segurança e para o cumprimento de contratos com órgãos reguladores (**ARTESP / ANTT**). Historicamente, a decisão de roçar depende de inspeção visual humana subjetiva ou de cronogramas fixos desvinculados da real taxa de crescimento da grama, gerando:
@@ -95,7 +95,7 @@ Um aplicativo mobile com arquitetura **Offline-First** que orienta o operador de
 
 ---
 
-## 💼 Resumo Executivo do Plano de Negócio
+##  Resumo Executivo do Plano de Negócio
 
 O plano de negócio detalhado encontra-se no documento formal [docs/plano-de-negocio.md](docs/plano-de-negocio.md). Abaixo estão os pilares fundamentais:
 
@@ -107,7 +107,7 @@ O plano de negócio detalhado encontra-se no documento formal [docs/plano-de-neg
 
 ---
 
-## 🛠️ Stack Tecnológica e Justificativa de Continuidade
+##  Stack Tecnológica e Justificativa de Continuidade
 
 O projeto foi construído utilizando a seguinte arquitetura técnica:
 
@@ -124,7 +124,7 @@ O grupo optou conscientemente por **manter a base em React Native com Expo**, se
 
 ---
 
-## 📱 Telas e Fluxos Implementados
+##  Telas e Fluxos Implementados
 
 A aplicação contempla todos os fluxos operacionais de ponta a ponta:
 
@@ -139,7 +139,7 @@ A aplicação contempla todos os fluxos operacionais de ponta a ponta:
 
 ---
 
-## 🏆 Histórico de Evolução do Projeto (Sprints 1 a 4)
+##  Histórico de Evolução do Projeto (Sprints 1 a 4)
 
 | Sprint | Foco Principal | Entregas Realizadas |
 | :--- | :--- | :--- |
@@ -150,11 +150,11 @@ A aplicação contempla todos os fluxos operacionais de ponta a ponta:
 
 ---
 
-## 👥 Integrantes do Projeto
+##  Integrantes do Projeto
 
-* **Matheus Morelli** — RM: `[INSERIR_RM]`
-* **Rafael Ferreira** — RM: `[INSERIR_RM]`
-* **Cauã Muniz** — RM: `[INSERIR_RM]`
-* **Henrique Mortari** — RM: `[INSERIR_RM]`
-* **Victor Mortari** — RM: `[INSERIR_RM]`
-* **Lucas Eiki** — RM: `[INSERIR_RM]`
+* **Matheus Morelli** — RM: `[562765]`
+* **Rafael Ferreira** — RM: `[563285]`
+* **Cauã Muniz** — RM: `[566527]`
+* **Henrique Mortari** — RM: `[564699]`
+* **Victor Mortari** — RM: `[564804]`
+* **Lucas Eiki** — RM: `[561607]`
