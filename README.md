@@ -16,7 +16,7 @@
 | Recurso | Descrição | Link de Acesso |
 | :--- | :--- | :---: |
 | 📱 **Download do APK Final** | Binário instalável pronto para qualquer smartphone Android | [👉 Baixar APK Android (Google Drive)](https://drive.google.com/file/d/1-uEWAiEO1xUo_AeLz3LoHA-9eiJdD3Cg/view?usp=sharing) |
-| 🎬 **Vídeo de Pitch & Demonstração** | Apresentação do grupo, problema, demo do app no aparelho e plano de negócio (< 5 min) | [👉 Assistir Pitch no YouTube (Não Listado)](https://www.youtube.com/watch?v=iWxXlFs4acU) |
+| 🎬 **Vídeo de Pitch & Demonstração** | Apresentação do grupo, problema, demo do app no aparelho e plano de negócio (< 5 min) | [👉 Assistir Pitch no YouTube(https://www.youtube.com/watch?v=iWxXlFs4acU) |
 | 📑 **Plano de Negócio Completo** | Análise de viabilidade comercial, custos, receita B2B, personas e impacto CCR | [👉 Acessar docs/plano-de-negocio.md](docs/plano-de-negocio.md) |
 | 🧪 **Documento de Testes Manuais** | Matriz com os fluxos principais e secundários testados de ponta a ponta | [👉 Acessar docs/testes-manuais-sprint3.md](docs/testes-manuais-sprint3.md) |
 
