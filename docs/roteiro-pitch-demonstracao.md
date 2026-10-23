@@ -1,8 +1,23 @@
 # Roteiro do Vídeo de Pitch & Demonstração — Sprint 4
 **Projeto:** Motiva VerdeCheck Mobile  
 **Challenge:** FIAP + CCR Motiva  
-**Tempo Total Alvo:** Entre 3m45s e 4m45s (Limite máximo do edital: 5 minutos)  
-**Formato de Entrega:** Vídeo no YouTube como "Não Listado" (*Unlisted*)
+**Tempo Recomendado da Versão Curta:** ~2 minutos e 45 segundos (Limite do edital: 5 min)  
+**Formato:** Vídeo no YouTube como "Não Listado" (*Unlisted*)
+
+---
+
+## ⚡ Versão Express (Roteiro Rápido e Direto ao Ponto — ~2m45s)
+
+> Ideal para gravar com fluidez e sem enrolação, cobrindo 100% dos critérios de avaliação.
+
+| Minutagem | Etapa | O que Fazer na Tela | Texto para Falar (Roteiro) |
+| :---: | :--- | :--- | :--- |
+| **0:00 - 0:30** | **Apresentação & O Problema** | Câmera aberta no grupo ou tela inicial do app. | *"Olá! Somos a equipe do **Motiva VerdeCheck Mobile** (Matheus, Rafael, Cauã, Henrique, Victor e Lucas). Hoje, na CCR Motiva, a roçada de rodovias ainda depende do 'olhômetro' ou de calendários fixos. Isso causa dois problemas: desperdício de combustível cortando grama antes da hora, ou mato alto encobrindo placas e gerando multas pesadas da ARTESP e ANTT. O VerdeCheck resolve isso digitalizando e padronizando a decisão em campo."* |
+| **0:30 - 0:50** | **Login & Dashboard** | No app Android, tocar em **"Acesso Rápido Demo"**. Mostrar a Home. | *"Aqui está o app instalado no Android. Acessamos com login corporativo — usando o atalho rápido do operador Lucas. Na Home temos o status de conexão, regras normativas da CCR e o resumo de vistorias do dia."* |
+| **0:50 - 1:30** | **Cenário 1: "Cortar" (Crítico)** | Nova Análise: SP-310, KM 142, Canteiro Central (20 cm), altura 120 cm. Foto de mato alto -> Processar -> Card Vermelho. | *"Na Nova Análise, informamos a SP-310, KM 142 e Canteiro Central — onde o limite normativo da CCR é de 20 centímetros. Com altura de 120 cm, fotografamos o trecho e processamos. Em menos de 2 segundos temos o veredito em card vermelho: **'Cortar'**, severidade crítica, apontando 100 cm de excesso. Salvamos no histórico."* |
+| **1:30 - 1:55** | **Cenário 2: "Não Cortar" + Histórico** | Nova Análise: SP-348, Faixa de Domínio (30 cm), altura 18 cm. Foto rasteira -> Card Verde. Abrir aba Histórico. | *"Já em um trecho conforme — como a SP-348 com grama a 18 cm —, o app emite na hora o veredito verde: **'Não cortar'**, evitando deslocamento inútil de tratores. No Histórico, a supervisão audita todas as vistorias com fotos e métricas carimbadas. E o app funciona **100% Offline-First**, ideal para trechos sem sinal de celular."* |
+| **1:55 - 2:25** | **Plano de Negócio & Custos** | Mostrar slide rápido com números de negócio ou resumo do README. | *"Nosso modelo comercial é **B2B SaaS**, cobrando entre **R$ 14 e R$ 18 por quilômetro monitorado/mês** — um mercado de mais de R$ 650 mil anuais na malha CCR. O custo de nuvem é enxuto, de apenas **R$ 7.180/mês**. Para a concessionária, geramos uma **economia de até 22% no custo de roçada** — mais de R$ 250 mil/ano poupados por concessão —, além de blindagem contra multas."* |
+| **2:25 - 2:45** | **Evolução das Sprints & Fim** | Mostrar tela de Integrantes do README ou câmera. | *"Ao longo das 4 Sprints, evoluímos da arquitetura inicial até este **APK final publicado e funcional**, testado sem erros e com plano de negócio validado. O VerdeCheck leva eficiência e inteligência para as rodovias da CCR. Muito obrigado!"* |
 
 ---
 
