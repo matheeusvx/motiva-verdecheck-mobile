@@ -5,12 +5,12 @@ PROJETO: MOTIVA VERDECHECK MOBILE
 ================================================================================
 
 1. INTEGRANTES DO GRUPO (NOME E RM):
-- Matheus Morelli - RM: [INSERIR_RM]
-- Rafael Ferreira - RM: [INSERIR_RM]
-- Cauã Muniz - RM: [INSERIR_RM]
-- Henrique Mortari - RM: [INSERIR_RM]
-- Victor Mortari - RM: [INSERIR_RM]
-- Lucas Eiki - RM: [INSERIR_RM]
+- Matheus Morelli - RM: 562765
+- Rafael Ferreira - RM: 563285
+- Cauã Muniz - RM: 566527
+- Henrique Mortari - RM: 564699
+- Victor Mortari - RM: 564804
+- Lucas Eiki - RM: 561607
 
 2. LINK DO REPOSITÓRIO GITHUB FINAL COM README CONSOLIDADO:
 https://github.com/matheeusvx/motiva-verdecheck-mobile
